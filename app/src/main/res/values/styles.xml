@@ -3,9 +3,24 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+    </style>
+
+    <!-- Prevents crash on certain devices to namespace conflict -->
+    <style name="FrameworkRoot.Theme" parent="Theme.AppCompat.Light.DarkActionBar" />
+
+    <style name="Theme.Codewars.Base" parent="FrameworkRoot.Theme">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+    <style name="Theme.Codewars" parent="Theme.Codewars.Base" />
+
+    <style name="Theme.Codewars.NoActionBar" parent="Theme.Codewars">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Codewars.SearchUser" parent="Theme.Codewars.NoActionBar" />
 
 </resources>

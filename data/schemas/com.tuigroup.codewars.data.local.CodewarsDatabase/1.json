@@ -1,0 +1,57 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "ac1b654a40e0cef8f1c0d41b06b84c2e",
+    "entities": [
+      {
+        "tableName": "user",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userName` TEXT NOT NULL, `name` TEXT, `honor` INTEGER NOT NULL, `clan` TEXT, `leaderboard_position` INTEGER NOT NULL, PRIMARY KEY(`userName`))",
+        "fields": [
+          {
+            "fieldPath": "userName",
+            "columnName": "userName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "honor",
+            "columnName": "honor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "clan",
+            "columnName": "clan",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "leaderboardPosition",
+            "columnName": "leaderboard_position",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "userName"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"ac1b654a40e0cef8f1c0d41b06b84c2e\")"
+    ]
+  }
+}

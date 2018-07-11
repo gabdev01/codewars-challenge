@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="activity_default_padding">16dp</dimen>
+    <dimen name="activity_default_horizontal_spacing">16dp</dimen>
+    <dimen name="cardview_default_radius">3dp</dimen>
+    <dimen name="cardview_default_elevation">2dp</dimen>
+    <dimen name="cardview_default_padding">12dp</dimen>
+    <dimen name="toolbar_horizontal_spacing">12dp</dimen>
+
+    <dimen name="font_size_caption">12sp</dimen>
+    <dimen name="font_size_small">14sp</dimen>
+    <dimen name="font_size_normal">16sp</dimen>
+    <dimen name="font_size_large">20sp</dimen>
+    <dimen name="font_size_xlarge">24sp</dimen>
+    <dimen name="font_size_xxlarge">36sp</dimen>
+
+    <dimen name="searchviewitem_horizontal_space">8dp</dimen>
+
+</resources>

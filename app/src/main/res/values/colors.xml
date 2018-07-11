@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Generic colors -->
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!-- All text colors -->
+    <color name="primary_text_dark_normal">#FFFFFF</color>
+    <color name="primary_text_light_normal">#000000</color>
+    <color name="secondary_text_dark_normal">#DDDDDD</color>
+    <color name="secondary_text_light_normal">#888888</color>
+
+    <!-- Search user view -->
+    <color name="search_user_view_background">#EEEEEE</color>
+    <color name="search_user_card_view_background">#FFFFFF</color>
+    <color name="search_user_toobar_icon">#FFFFFF</color>
+
 </resources>
