@@ -1,6 +1,6 @@
 package com.tuigroup.codewars.data;
 
-import com.tuigroup.codewars.data.remote.UsersRestApi;
+import com.tuigroup.codewars.data.remote.UserRestApi;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,15 +13,14 @@ public class UsersRepositoryTest {
 
     private static final String FAKE_USERNAME = "David";
 
-    private UsersRepository usersRepository;
+    private UserRepository userRepository;
 
     @Mock
-    private UsersRestApi mockUsersRestApi;
+    private UserRestApi mockUsersRestApi;
 
     @Before
     public void setUp() {
-        usersRepository = UsersRepository.getInstance(mockUsersRestApi);
-        ;
+        //userRepository = UserRepository.class(mockUsersRestApi);
     }
 
     @Test
@@ -40,7 +39,7 @@ public class UsersRepositoryTest {
         Single<User> fakeObservable = Single.just(fakeUser);
         given(mockUsersRestApi.getUser(FAKE_USERNAME)).willReturn(fakeObservable);
 
-        usersRepository.getUser(FAKE_USERNAME);
+        userRepository.getUser(FAKE_USERNAME);
 
         verify(mockUsersRestApi).getUser(FAKE_USERNAME);*/
     }

@@ -1,6 +1,10 @@
 package codewars.tuigroup.com.codewars.ui.search;
 
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -10,19 +14,21 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.tuigroup.codewars.data.local.model.UserEntity;
+import com.tuigroup.codewars.data.local.model.UserSearchHistory;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import codewars.tuigroup.com.codewars.R;
-import codewars.tuigroup.com.codewars.di.ActivityScoped;
 import dagger.android.support.DaggerAppCompatActivity;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 
 public class SearchUserActivity extends DaggerAppCompatActivity implements View.OnClickListener, SearchUserContract.View {
@@ -32,8 +38,14 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
 
     @BindView(R.id.edittext_searchuser_toolbarsearch)
     EditText searchEditText;
+    @BindView(R.id.textview_searchuser_searchresult)
+    TextView searchResultTextView;
+    @BindView(R.id.progressbar_searchuser_searchresult)
+    ProgressBar searchResultProgressBar;
     @BindView(R.id.imageview_usersearch_clearsearch)
     ImageView clearSearchImageView;
+    @BindView(R.id.linearlayout_searchuseritem_root)
+    LinearLayout rootSearchUserItemLinearLayout;
     @BindView(R.id.textview_searchuseritem_leaderboardposition)
     TextView leaderboardPositionTextView;
     @BindView(R.id.textview_searchuseritem_username)
@@ -42,6 +54,14 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
     TextView clanTextView;
     @BindView(R.id.textview_searchuseritem_honor)
     TextView honorTextView;
+    @BindView(R.id.textview_searchuser_searchhistory)
+    TextView searchHistoryTextView;
+    @BindView(R.id.recyclerview_searchuser_searchhistory)
+    RecyclerView searchHistoryRecyclerView;
+
+
+    @Inject
+    UsersSearchHistoryAdapter usersSearchHistoryAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +114,10 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
             }
         });
 
+        searchHistoryRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        searchHistoryRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        searchHistoryRecyclerView.setAdapter(usersSearchHistoryAdapter);
+
         clearSearchImageView.setOnClickListener(this);
 
         searchUserPresenter.attachView(this);
@@ -136,25 +160,79 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
 
     @Override
     public void showSearchUserIndicator(boolean enabled) {
+        if (enabled) {
+            searchResultProgressBar.setVisibility(View.VISIBLE);
+        } else {
+            searchResultProgressBar.setVisibility(View.INVISIBLE);
+        }
+        searchResultTextView.setVisibility(View.INVISIBLE);
+        rootSearchUserItemLinearLayout.setVisibility(View.INVISIBLE);
+    }
 
+    @Override
+    public void showSearchUserNotFound() {
+        showSearchUserMessage(
+                getString(R.string.search_user_search_result_not_found),
+                getResources().getColor(R.color.primary_text_light_normal));
     }
 
     @Override
     public void showSearchUserError() {
-
+        showSearchUserMessage(
+                getString(R.string.generic_error_problem_server),
+                getResources().getColor(R.color.error_text_light_normal));
     }
 
     @Override
     public void showSearchUserNoInternetError() {
+        showSearchUserMessage(
+                getString(R.string.generic_error_no_internet),
+                getResources().getColor(R.color.error_text_light_normal));
+    }
 
+    private void showSearchUserMessage(String message, @ColorInt int color) {
+        searchResultProgressBar.setVisibility(View.INVISIBLE);
+        searchResultTextView.setVisibility(View.VISIBLE);
+        rootSearchUserItemLinearLayout.setVisibility(View.INVISIBLE);
+        searchResultTextView.setTextColor(color);
+        searchResultTextView.setText(message);
     }
 
     @Override
     public void showSearchUserSuccess(UserEntity user) {
+        searchResultProgressBar.setVisibility(View.INVISIBLE);
+        searchResultTextView.setVisibility(View.INVISIBLE);
+        rootSearchUserItemLinearLayout.setVisibility(View.VISIBLE);
+
         leaderboardPositionTextView.setText(
                 String.format(getString(R.string.search_user_item_leaderboard_position), user.getLeaderboardPosition()));
-        usernameTextView.setText(user.getUserName());
+        usernameTextView.setText(user.getUsername());
         clanTextView.setText(user.getClan());
         honorTextView.setText(String.valueOf(user.getHonor()));
+    }
+
+    @Override
+    public void showUsersSearchHistory(List<UserSearchHistory> usersSearchHistory) {
+        searchHistoryRecyclerView.setVisibility(View.VISIBLE);
+        searchHistoryTextView.setVisibility(View.INVISIBLE);
+        usersSearchHistoryAdapter.update(usersSearchHistory);
+    }
+
+    @Override
+    public void showNoUsersSearchHistory() {
+        searchHistoryRecyclerView.setVisibility(View.INVISIBLE);
+        searchHistoryTextView.setVisibility(View.VISIBLE);
+        searchHistoryTextView.setTextColor(
+                getResources().getColor(R.color.primary_text_light_normal));
+        searchHistoryTextView.setText(R.string.search_user_search_history_empty);
+    }
+
+    @Override
+    public void showUsersSearchHistoryError() {
+        searchHistoryRecyclerView.setVisibility(View.INVISIBLE);
+        searchHistoryTextView.setVisibility(View.VISIBLE);
+        searchHistoryTextView.setTextColor(
+                getResources().getColor(R.color.error_text_light_normal));
+        searchHistoryTextView.setText(R.string.search_user_search_history_error);
     }
 }

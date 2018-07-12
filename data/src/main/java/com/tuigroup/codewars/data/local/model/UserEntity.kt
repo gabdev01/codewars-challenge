@@ -7,7 +7,8 @@ import android.arch.persistence.room.PrimaryKey
 @Entity(tableName = "user")
 data class UserEntity(
         @PrimaryKey
-        val userName: String,
+        @ColumnInfo(name = "username")
+        val username: String,
         @ColumnInfo(name = "name")
         val name: String? = null,
         @ColumnInfo(name = "honor")

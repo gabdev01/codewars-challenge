@@ -12,7 +12,7 @@ import com.tuigroup.codewars.data.local.model.UserEntity;
 import io.reactivex.Flowable;
 
 @Dao
-public interface UsersDao {
+public interface UserDao {
 
     @Query("SELECT * FROM user WHERE username == :username")
     Flowable<UserEntity> getUserById(String username);

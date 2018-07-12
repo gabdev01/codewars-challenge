@@ -10,6 +10,7 @@
     <color name="primary_text_light_normal">#000000</color>
     <color name="secondary_text_dark_normal">#DDDDDD</color>
     <color name="secondary_text_light_normal">#888888</color>
+    <color name="error_text_light_normal">#FF5500</color>
 
     <!-- Search user view -->
     <color name="search_user_view_background">#EEEEEE</color>

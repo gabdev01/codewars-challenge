@@ -2,15 +2,15 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "ac1b654a40e0cef8f1c0d41b06b84c2e",
+    "identityHash": "0d130407aeed2737fc89b54d4c8c94a1",
     "entities": [
       {
         "tableName": "user",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userName` TEXT NOT NULL, `name` TEXT, `honor` INTEGER NOT NULL, `clan` TEXT, `leaderboard_position` INTEGER NOT NULL, PRIMARY KEY(`userName`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`username` TEXT NOT NULL, `name` TEXT, `honor` INTEGER NOT NULL, `clan` TEXT, `leaderboard_position` INTEGER NOT NULL, PRIMARY KEY(`username`))",
         "fields": [
           {
-            "fieldPath": "userName",
-            "columnName": "userName",
+            "fieldPath": "username",
+            "columnName": "username",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -41,7 +41,33 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "userName"
+            "username"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "user_search_history",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`search_date` INTEGER NOT NULL, `user_id` TEXT NOT NULL, PRIMARY KEY(`search_date`))",
+        "fields": [
+          {
+            "fieldPath": "searchDate",
+            "columnName": "search_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "search_date"
           ],
           "autoGenerate": false
         },
@@ -51,7 +77,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"ac1b654a40e0cef8f1c0d41b06b84c2e\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"0d130407aeed2737fc89b54d4c8c94a1\")"
     ]
   }
 }

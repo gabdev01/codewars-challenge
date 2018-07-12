@@ -94,7 +94,7 @@ public class CodewarsRestModule {
 
     @Singleton
     @Provides
-    UsersRestApi provideUsersRestApi(Retrofit retrofit) {
-        return retrofit.create(UsersRestApi.class);
+    UserRestApi provideUserRestApi(Retrofit retrofit) {
+        return retrofit.create(UserRestApi.class);
     }
 }

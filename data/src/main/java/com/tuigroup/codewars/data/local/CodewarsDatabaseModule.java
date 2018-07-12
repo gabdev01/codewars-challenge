@@ -20,7 +20,13 @@ public class CodewarsDatabaseModule {
 
     @Singleton
     @Provides
-    UsersDao provideUsersDao(CodewarsDatabase codewarsDatabase) {
+    UserDao provideUserDao(CodewarsDatabase codewarsDatabase) {
         return codewarsDatabase.usersDao();
+    }
+
+    @Singleton
+    @Provides
+    UserSearchHistoryDao provideUserSearchHistoryDao(CodewarsDatabase codewarsDatabase) {
+        return codewarsDatabase.searchUserHistoryDao();
     }
 }

@@ -17,7 +17,7 @@
         <activity
             android:name=".ui.search.SearchUserActivity"
             android:theme="@style/Theme.Codewars.SearchUser"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden|adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

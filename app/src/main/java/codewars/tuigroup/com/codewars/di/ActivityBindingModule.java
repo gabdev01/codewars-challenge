@@ -9,5 +9,5 @@ import dagger.android.ContributesAndroidInjector;
 public abstract class ActivityBindingModule {
     @ActivityScoped
     @ContributesAndroidInjector(modules = SearchUserModule.class)
-    abstract SearchUserActivity searchUsersActivity();
+    abstract SearchUserActivity searchUserActivity();
 }

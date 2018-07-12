@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearlayout_searchuseritem_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -18,9 +19,8 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingEnd="@dimen/searchviewitem_horizontal_space"
-            android:paddingStart="@dimen/searchviewitem_horizontal_space"
             android:textColor="@color/primary_text_light_normal"
-            android:textSize="@dimen/font_size_normal"/>
+            android:textSize="@dimen/font_size_normal" />
 
         <TextView
             android:id="@+id/textview_searchuseritem_username"
@@ -50,7 +50,6 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:paddingEnd="@dimen/searchviewitem_horizontal_space"
             android:textColor="@color/primary_text_light_normal"
             android:textSize="@dimen/font_size_normal" />
 
