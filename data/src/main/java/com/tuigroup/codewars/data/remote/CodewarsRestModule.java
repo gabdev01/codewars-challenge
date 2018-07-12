@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.tuigroup.codewars.data.BuildConfig;
+import com.tuigroup.codewars.data.remote.interceptor.ConnectivityInterceptor;
 import com.tuigroup.codewars.data.remote.interceptor.NetworkSlowdownInterceptor;
 import com.tuigroup.codewars.data.remote.interceptor.TokenAttachingInterceptor;
 
@@ -26,18 +27,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class CodewarsRestModule {
 
     private static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    public static final int DISK_CACHE_SIZE = 10 * 1024 * 1024;
 
     private static final String BASE_URL = BuildConfig.CODEWARS_URL;
     private static final int TIMEOUT_SECONDS = 30;
     private static final boolean ENABLE_SLOW_REQUEST = false;
 
-
     @Provides
     @Singleton
     Cache provideCache(Context context) {
-        final int cacheSize = 10 * 1024 * 1024;
         File cacheDir = context.getCacheDir();
-        return new Cache(cacheDir, cacheSize);
+        return new Cache(cacheDir, DISK_CACHE_SIZE);
     }
 
     @Provides
@@ -57,12 +57,14 @@ public class CodewarsRestModule {
 
     @Provides
     @Singleton
-    static OkHttpClient provideOkHttpClient(Cache cache,
+    static OkHttpClient provideOkHttpClient(Context context,
+                                            Cache cache,
                                             HttpLoggingInterceptor loggingInterceptor,
                                             TokenAttachingInterceptor tokenAttachingInterceptor) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.addInterceptor(loggingInterceptor);
         builder.addInterceptor(tokenAttachingInterceptor);
+        builder.addInterceptor(new ConnectivityInterceptor(context.getApplicationContext()));
         builder.cache(cache);
         builder.readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS);
         builder.connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS);
