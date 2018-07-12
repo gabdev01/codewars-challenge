@@ -1,7 +1,6 @@
 package codewars.tuigroup.com.codewars.ui.search;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -13,21 +12,23 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tuigroup.codewars.data.UsersRepository;
 import com.tuigroup.codewars.data.local.model.UserEntity;
-import com.tuigroup.codewars.data.remote.CodewarsRestProvider;
-import com.tuigroup.codewars.data.remote.UsersRestApi;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import codewars.tuigroup.com.codewars.CodewarsApplication;
 import codewars.tuigroup.com.codewars.R;
+import codewars.tuigroup.com.codewars.di.ActivityScoped;
+import dagger.android.support.DaggerAppCompatActivity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class SearchUserActivity extends AppCompatActivity implements View.OnClickListener, SearchUserContract.View {
 
-    private SearchUserContract.Presenter searchUserPresenter;
+public class SearchUserActivity extends DaggerAppCompatActivity implements View.OnClickListener, SearchUserContract.View {
+
+    @Inject
+    SearchUserContract.Presenter searchUserPresenter;
 
     @BindView(R.id.edittext_searchuser_toolbarsearch)
     EditText searchEditText;
@@ -95,9 +96,6 @@ public class SearchUserActivity extends AppCompatActivity implements View.OnClic
 
         clearSearchImageView.setOnClickListener(this);
 
-        searchUserPresenter = new SearchUserPresenter(UsersRepository.getInstance(
-                CodewarsRestProvider.getRestApi(UsersRestApi.class),
-                CodewarsApplication.from(this).getDatabase().usersDao()));
         searchUserPresenter.attachView(this);
     }
 
@@ -134,11 +132,6 @@ public class SearchUserActivity extends AppCompatActivity implements View.OnClic
 
     private void performClearSearch() {
         searchEditText.getText().clear();
-    }
-
-    @Override
-    public void setPresenter(SearchUserContract.Presenter presenter) {
-        searchUserPresenter = checkNotNull(presenter);
     }
 
     @Override

@@ -14,6 +14,7 @@ buildscript {
     ext.guavaVersion = '24.0-android'
     ext.okHttpVersion = '3.8.0'
     ext.roomVersion = '1.1.0'
+    ext.dagger2Version = '2.15'
 
     repositories {
         google()

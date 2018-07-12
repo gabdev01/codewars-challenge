@@ -10,11 +10,15 @@ import com.tuigroup.codewars.data.remote.model.User;
 import com.tuigroup.codewars.data.util.NetworkBoundSource;
 import com.tuigroup.codewars.data.util.Resource;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.functions.Function;
 
+@Singleton
 public class UsersRepository {
 
     private static UsersRepository INSTANCE;
@@ -22,16 +26,10 @@ public class UsersRepository {
     private UsersRestApi usersRestApi;
     private UsersDao usersDao;
 
-    private UsersRepository(UsersRestApi usersRestApi, UsersDao usersDao) {
+    @Inject
+    UsersRepository(UsersRestApi usersRestApi, UsersDao usersDao) {
         this.usersRestApi = usersRestApi;
         this.usersDao = usersDao;
-    }
-
-    public static UsersRepository getInstance(UsersRestApi usersRestApi, UsersDao usersDao) {
-        if (INSTANCE == null) {
-            INSTANCE = new UsersRepository(usersRestApi, usersDao);
-        }
-        return INSTANCE;
     }
 
     public Flowable<Resource<UserEntity>> getUser(String username) {

@@ -1,19 +1,17 @@
 package codewars.tuigroup.com.codewars;
 
-import android.app.Application;
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.util.Log;
 
 import com.squareup.leakcanary.LeakCanary;
-import com.tuigroup.codewars.data.local.CodewarsDatabase;
 
 import butterknife.ButterKnife;
+import codewars.tuigroup.com.codewars.di.DaggerAppComponent;
+import dagger.android.AndroidInjector;
+import dagger.android.DaggerApplication;
 import io.reactivex.plugins.RxJavaPlugins;
 
-public class CodewarsApplication extends Application {
-
-    private CodewarsDatabase codewarsDatabase;
+public class CodewarsApplication extends DaggerApplication {
 
     public static CodewarsApplication from(final Context context) {
         return (CodewarsApplication) context.getApplicationContext();
@@ -30,15 +28,14 @@ public class CodewarsApplication extends Application {
         }
         LeakCanary.install(this);
 
-        initRoom();
         initButterKnife();
         initRxJava();
         initStrictMode();
     }
 
-    private void initRoom() {
-        codewarsDatabase = Room.databaseBuilder(getApplicationContext(),
-                CodewarsDatabase.class, "database-codewars").build();
+    @Override
+    protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
+        return DaggerAppComponent.builder().application(this).build();
     }
 
     private void initButterKnife() {
@@ -65,9 +62,5 @@ public class CodewarsApplication extends Application {
                     .penaltyDeath()
                     .build());
         }*/
-    }
-
-    public CodewarsDatabase getDatabase() {
-        return codewarsDatabase;
     }
 }

@@ -19,7 +19,6 @@ public abstract class BasePresenter<View extends BaseView> implements ScopedPres
     @CallSuper
     public void attachView(View view) {
         this.view = checkNotNull(view, "View cannot be null!");
-        this.view.setPresenter(this);
     }
 
     @Override
