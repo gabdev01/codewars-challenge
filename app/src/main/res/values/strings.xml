@@ -3,7 +3,7 @@
 
     <!-- Generic errors -->
     <string name="generic_error_no_internet">No Internet connection. Make sure Wi-Fi or cellular data is turned on, then try again.</string>
-    <string name="generic_error_problem_server">Oops! Sorry, it looks like something went wrong. Please try again.</string>
+    <string name="generic_error_problem_server">An error happens with the server. Please try again and if the problem persists, please contact support.</string>
 
     <!-- Search user view -->
     <string name="search_user_previous_searches_label">Previous searches</string>
@@ -14,5 +14,5 @@
     <string name="search_user_item_leaderboard_position">#<xliff:g example="12" id="position">%1$d</xliff:g></string>
     <string name="search_user_search_history_empty">Your search history is empty.</string>
     <string name="search_user_search_history_error">Oops, sorry we are not able to show your search history.</string>
-    <string name="search_user_search_result_not_found">Oops, this user doesn\'t exist. Please, try again with a different spelling.</string>
+    <string name="search_user_search_result_not_found">Oops, sorry this user doesn\'t exist. Please, try again with another spelling.</string>
 </resources>

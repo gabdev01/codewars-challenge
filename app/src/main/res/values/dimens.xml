@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <dimen name="activity_default_padding">16dp</dimen>
     <dimen name="activity_default_horizontal_spacing">16dp</dimen>
     <dimen name="cardview_default_radius">3dp</dimen>
@@ -16,5 +15,5 @@
     <dimen name="font_size_xxlarge">36sp</dimen>
 
     <dimen name="searchviewitem_horizontal_space">8dp</dimen>
-
+    <dimen name="searchviewitem_items_vertical_space">16dp</dimen>
 </resources>

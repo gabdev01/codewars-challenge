@@ -20,13 +20,14 @@ public class SearchUserPresenter extends BasePresenter<SearchUserContract.View>
     private final static int SEARCH_USER_HISTORY_LIMIT = 5;
 
     private UserRepository userRepository;
-
     private CompositeDisposable searchCompositeDisposable;
+    private UserEntity userFound;
 
     @Inject
     public SearchUserPresenter(UserRepository userRepository) {
         this.userRepository = userRepository;
         this.searchCompositeDisposable = new CompositeDisposable();
+        this.userFound = null;
     }
 
     @Override
@@ -65,10 +66,12 @@ public class SearchUserPresenter extends BasePresenter<SearchUserContract.View>
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         user -> {
+                            userFound = user;
                             view.showSearchUserIndicator(false);
-                            view.showSearchUserSuccess(user);
+                            view.showSearchUserSuccess(userFound);
                         },
                         throwable -> {
+                            userFound = null;
                             boolean isThrowableHandled = false;
                             if (throwable instanceof HttpException) {
                                 int statusCode = ((HttpException) throwable).code();
@@ -90,6 +93,11 @@ public class SearchUserPresenter extends BasePresenter<SearchUserContract.View>
                             }
                         }
                 ));
+    }
+
+    @Override
+    public void openUserFoundDetails() {
+        openUserDetails(userFound);
     }
 
     @Override

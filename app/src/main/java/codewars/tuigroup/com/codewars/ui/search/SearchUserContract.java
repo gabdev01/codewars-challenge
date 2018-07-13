@@ -33,6 +33,8 @@ public class SearchUserContract {
 
         void searchUser(String username);
 
+        void openUserFoundDetails();
+
         void openUserDetails(UserEntity user);
     }
 }

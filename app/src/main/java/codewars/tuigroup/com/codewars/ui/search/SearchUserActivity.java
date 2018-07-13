@@ -1,8 +1,11 @@
 package codewars.tuigroup.com.codewars.ui.search;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -38,6 +41,8 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
 
     @BindView(R.id.edittext_searchuser_toolbarsearch)
     EditText searchEditText;
+    @BindView(R.id.cardview_searchuser_searchresult)
+    CardView searchResultCardView;
     @BindView(R.id.textview_searchuser_searchresult)
     TextView searchResultTextView;
     @BindView(R.id.progressbar_searchuser_searchresult)
@@ -72,7 +77,8 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        View customToolBarView = LayoutInflater.from(this).inflate(R.layout.view_search_user_toolbar, null);
+        View customToolBarView = LayoutInflater.from(this)
+                .inflate(R.layout.view_search_user_toolbar, null);
         Toolbar.LayoutParams params = new Toolbar.LayoutParams(
                 Toolbar.LayoutParams.MATCH_PARENT,
                 Toolbar.LayoutParams.MATCH_PARENT);
@@ -114,11 +120,21 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
             }
         });
 
+        // As the card view has its own ripple effect it is better to remove this one
+        rootSearchUserItemLinearLayout.setBackground(null);
+
         searchHistoryRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         searchHistoryRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        DividerItemDecoration decoration = new DividerItemDecoration(
+                this, DividerItemDecoration.VERTICAL);
+        decoration.setDrawable(new ColorDrawable(getResources().getColor(R.color.search_user_item_divider)));
+        searchHistoryRecyclerView.addItemDecoration(decoration);
         searchHistoryRecyclerView.setAdapter(usersSearchHistoryAdapter);
 
         clearSearchImageView.setOnClickListener(this);
+        searchResultCardView.setOnClickListener(this);
+
+        searchResultCardView.setClickable(false);
 
         searchUserPresenter.attachView(this);
     }
@@ -145,6 +161,8 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
     public void onClick(View v) {
         if (v.getId() == R.id.imageview_usersearch_clearsearch) {
             performClearSearch();
+        } else if (v.getId() == R.id.cardview_searchuser_searchresult) {
+            performOpenUserFound();
         }
     }
 
@@ -152,6 +170,10 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
         searchEditText.setCursorVisible(false);
         String searchText = searchEditText.getText().toString();
         searchUserPresenter.searchUser(searchText);
+    }
+
+    private void performOpenUserFound() {
+        searchUserPresenter.openUserFoundDetails();
     }
 
     private void performClearSearch() {
@@ -167,6 +189,7 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
         }
         searchResultTextView.setVisibility(View.INVISIBLE);
         rootSearchUserItemLinearLayout.setVisibility(View.INVISIBLE);
+        searchResultCardView.setClickable(false);
     }
 
     @Override
@@ -174,6 +197,7 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
         showSearchUserMessage(
                 getString(R.string.search_user_search_result_not_found),
                 getResources().getColor(R.color.primary_text_light_normal));
+        searchResultCardView.setClickable(false);
     }
 
     @Override
@@ -181,6 +205,7 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
         showSearchUserMessage(
                 getString(R.string.generic_error_problem_server),
                 getResources().getColor(R.color.error_text_light_normal));
+        searchResultCardView.setClickable(false);
     }
 
     @Override
@@ -188,6 +213,7 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
         showSearchUserMessage(
                 getString(R.string.generic_error_no_internet),
                 getResources().getColor(R.color.error_text_light_normal));
+        searchResultCardView.setClickable(false);
     }
 
     private void showSearchUserMessage(String message, @ColorInt int color) {
@@ -203,9 +229,10 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
         searchResultProgressBar.setVisibility(View.INVISIBLE);
         searchResultTextView.setVisibility(View.INVISIBLE);
         rootSearchUserItemLinearLayout.setVisibility(View.VISIBLE);
+        searchResultCardView.setClickable(true);
 
-        leaderboardPositionTextView.setText(
-                String.format(getString(R.string.search_user_item_leaderboard_position), user.getLeaderboardPosition()));
+        leaderboardPositionTextView.setText(String.format(
+                getString(R.string.search_user_item_leaderboard_position), user.getLeaderboardPosition()));
         usernameTextView.setText(user.getUsername());
         clanTextView.setText(user.getClan());
         honorTextView.setText(String.valueOf(user.getHonor()));
