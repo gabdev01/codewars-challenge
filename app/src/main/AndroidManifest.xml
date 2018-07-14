@@ -24,6 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.challenges.UserChallengesActivity"
+            android:theme="@style/Theme.Codewars.UserChallenges" />
     </application>
 
 </manifest>

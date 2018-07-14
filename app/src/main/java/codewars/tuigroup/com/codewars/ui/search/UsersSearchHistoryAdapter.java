@@ -90,7 +90,7 @@ public class UsersSearchHistoryAdapter extends BaseQueuedAdapter<UserSearchHisto
                 return;
             }
             UserSearchHistory searchedUser = getItem(position);
-            searchUserPresenter.openUserDetails(searchedUser.getUser());
+            searchUserPresenter.openUserChallenges(searchedUser.getUser());
         }
     }
 }

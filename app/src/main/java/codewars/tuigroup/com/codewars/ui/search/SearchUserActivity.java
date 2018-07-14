@@ -1,5 +1,6 @@
 package codewars.tuigroup.com.codewars.ui.search;
 
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -31,6 +32,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import codewars.tuigroup.com.codewars.R;
+import codewars.tuigroup.com.codewars.ui.challenges.UserChallengesActivity;
 import dagger.android.support.DaggerAppCompatActivity;
 
 
@@ -173,7 +175,7 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
     }
 
     private void performOpenUserFound() {
-        searchUserPresenter.openUserFoundDetails();
+        searchUserPresenter.openUserFoundChallenges();
     }
 
     private void performClearSearch() {
@@ -261,5 +263,12 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
         searchHistoryTextView.setTextColor(
                 getResources().getColor(R.color.error_text_light_normal));
         searchHistoryTextView.setText(R.string.search_user_search_history_error);
+    }
+
+    @Override
+    public void showUserChallengesView(String username) {
+        Intent intent = new Intent(this, UserChallengesActivity.class);
+        intent.putExtra(UserChallengesActivity.EXTRA_USER_ID, username);
+        startActivity(intent);
     }
 }

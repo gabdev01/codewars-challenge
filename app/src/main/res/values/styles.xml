@@ -23,4 +23,6 @@
 
     <style name="Theme.Codewars.SearchUser" parent="Theme.Codewars.NoActionBar" />
 
+    <style name="Theme.Codewars.UserChallenges" parent="Theme.Codewars.NoActionBar" />
+
 </resources>

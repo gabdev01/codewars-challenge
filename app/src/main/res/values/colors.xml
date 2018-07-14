@@ -17,4 +17,10 @@
     <color name="search_user_card_view_background">#FFFFFF</color>
     <color name="search_user_toobar_icon">#FFFFFF</color>
     <color name="search_user_item_divider">#CCCCCC</color>
+
+    <!-- User challenges view -->
+    <color name="user_challenges_menu_text_normal">#BBFFFFFF</color>
+    <color name="user_challenges_menu_text_selected">#FFFFFF</color>
+    <color name="user_challenges_menu_icon_tint_normal">#BBFFFFFF</color>
+    <color name="user_challenges_menu_text_tint_selected">#FFFFFF</color>
 </resources>

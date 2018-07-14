@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearlayout_challengesitem_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/searchviewitem_items_vertical_space"
+    android:paddingTop="@dimen/searchviewitem_items_vertical_space"
+    tools:context=".ui.search.SearchUserActivity">
+
+    <TextView
+        android:id="@+id/textview_challengesitem_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/primary_text_light_normal"
+        android:textSize="@dimen/font_size_normal" />
+
+</LinearLayout>

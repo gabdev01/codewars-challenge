@@ -27,14 +27,16 @@ public class SearchUserContract {
         void showNoUsersSearchHistory();
 
         void showUsersSearchHistoryError();
+
+        void showUserChallengesView(String username);
     }
 
     interface Presenter extends ScopedPresenter<SearchUserContract.View> {
 
         void searchUser(String username);
 
-        void openUserFoundDetails();
+        void openUserFoundChallenges();
 
-        void openUserDetails(UserEntity user);
+        void openUserChallenges(UserEntity user);
     }
 }

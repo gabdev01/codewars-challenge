@@ -96,12 +96,12 @@ public class SearchUserPresenter extends BasePresenter<SearchUserContract.View>
     }
 
     @Override
-    public void openUserFoundDetails() {
-        openUserDetails(userFound);
+    public void openUserFoundChallenges() {
+        openUserChallenges(userFound);
     }
 
     @Override
-    public void openUserDetails(UserEntity user) {
-        // TODO Open and show the chalenges of the user
+    public void openUserChallenges(UserEntity user) {
+        view.showUserChallengesView(user.getUsername());
     }
 }

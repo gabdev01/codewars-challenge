@@ -15,4 +15,8 @@
     <string name="search_user_search_history_empty">Your search history is empty.</string>
     <string name="search_user_search_history_error">Oops, sorry we are not able to show your search history.</string>
     <string name="search_user_search_result_not_found">Oops, sorry this user doesn\'t exist. Please, try again with another spelling.</string>
+
+    <!-- User challenges view -->
+    <string name="user_challenges_menu_completed">Completed challenges</string>
+    <string name="user_challenges_menu_authored">Authored challeng</string>
 </resources>

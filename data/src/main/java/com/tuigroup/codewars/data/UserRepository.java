@@ -54,8 +54,11 @@ public class UserRepository {
         return searchUserHistoryDao.getLastUsersSearched(limit);
     }
 
-    public Single<CompletedChallengeResponse> getCompletedChallenges(String username, int page) {
-        return userRestApi.getCompletedChallenges(username, page);
+    public Single<List<CompletedChallenge>> getCompletedChallenges(String username, int page) {
+        return userRestApi.getCompletedChallenges(username, page)
+                .map(response -> {
+                    return response.getData();
+                });
     }
 
     public Single<AuthoredChallengeResponse> getAuthoredChallenges(String username) {
