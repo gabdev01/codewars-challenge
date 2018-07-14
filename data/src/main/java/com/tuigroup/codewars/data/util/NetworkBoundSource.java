@@ -9,19 +9,35 @@ import io.reactivex.schedulers.Schedulers;
 
 public abstract class NetworkBoundSource<LocalType, RemoteType> {
 
-    public NetworkBoundSource(FlowableEmitter<Resource<LocalType>> emitter) {
-        Disposable firstDataDisposable = getLocal()
-                .map(Resource::loading)
-                .subscribe(emitter::onNext);
+    private FlowableEmitter<Resource<LocalType>> emitter;
+    private Disposable firstDataDisposable;
 
+    public NetworkBoundSource(FlowableEmitter<Resource<LocalType>> emitter) {
+        this.emitter = emitter;
+        this.firstDataDisposable = getLocal()
+                .map(Resource::local)
+                .subscribe(
+                        result -> {
+                            firstDataDisposable.dispose();
+                            emitter.onNext(result);
+                            requestRemote();
+                        }, throwable -> {
+                            firstDataDisposable.dispose();
+                            emitter.onError(throwable);
+                            requestRemote();
+                        });
+    }
+
+    private void requestRemote() {
         getRemote().map(mapper())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(Schedulers.newThread())
-                .subscribe(localTypeData -> {
-                    firstDataDisposable.dispose();
-                    saveCallResult(localTypeData);
-                    getLocal().map(Resource::success).subscribe(emitter::onNext);
-                });
+                .subscribe(
+                        localTypeData -> {
+                            saveCallResult(localTypeData);
+                            getLocal().map(Resource::remote).subscribe(
+                                    emitter::onNext, emitter::onError);
+                        }, emitter::onError);
     }
 
     public abstract Single<RemoteType> getRemote();
