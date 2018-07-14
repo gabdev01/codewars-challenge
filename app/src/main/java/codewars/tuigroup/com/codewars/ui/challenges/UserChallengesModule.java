@@ -9,11 +9,12 @@ import dagger.android.ContributesAndroidInjector;
 
 import static codewars.tuigroup.com.codewars.ui.challenges.UserChallengesActivity.EXTRA_USER_ID;
 
-@Module(includes = ChallengesModule.Declarations.class)
-public class ChallengesModule {
+@Module(includes = UserChallengesModule.Declarations.class)
+public class UserChallengesModule {
 
     @Module
     public interface Declarations {
+
         @Binds
         @ActivityScoped
         ChallengesContract.Presenter challengesPresenter(ChallengesPresenter presenter);
@@ -22,8 +23,8 @@ public class ChallengesModule {
         @ActivityScoped
         UserChallengesContract.Presenter userChallengesPresenter(UserChallengesPresenter presenter);
 
-        @FragmentScoped
         @ContributesAndroidInjector
+        @FragmentScoped
         ChallengesFragment challengesFragment();
     }
 
@@ -33,9 +34,10 @@ public class ChallengesModule {
         return activity.getIntent().getStringExtra(EXTRA_USER_ID);
     }
 
+
     @Provides
     @ActivityScoped
-    static ChallengesAdapter provideChallengesAdapter(ChallengesPresenter challengesPresenter) {
-        return new ChallengesAdapter(challengesPresenter);
+    static ChallengesAdapter provideChallengesAdapter() {
+        return new ChallengesAdapter();
     }
 }

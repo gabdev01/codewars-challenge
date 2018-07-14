@@ -99,4 +99,10 @@ public class CodewarsRestModule {
     UserRestApi provideUserRestApi(Retrofit retrofit) {
         return retrofit.create(UserRestApi.class);
     }
+
+    @Singleton
+    @Provides
+    CodeChallengeRestApi provideCodeChallengeRestApi(Retrofit retrofit) {
+        return retrofit.create(CodeChallengeRestApi.class);
+    }
 }

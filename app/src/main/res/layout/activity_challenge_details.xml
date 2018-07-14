@@ -5,13 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.search.SearchUserActivity">
+    tools:context=".ui.challenge.ChallengeDetailsActivity">
 
-    <include
-        layout="@layout/toolbar_dark" />
+    <include layout="@layout/toolbar_dark" />
 
     <android.support.v4.widget.NestedScrollView
-        android:id="@+id/welcome_scrolling_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/app_background"
@@ -19,7 +17,7 @@
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <include layout="@layout/view_search_user" />
+        <include layout="@layout/view_challenge_details" />
 
     </android.support.v4.widget.NestedScrollView>
 

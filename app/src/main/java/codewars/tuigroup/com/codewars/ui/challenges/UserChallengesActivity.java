@@ -23,12 +23,12 @@ public class UserChallengesActivity extends DaggerAppCompatActivity
     @Inject
     UserChallengesContract.Presenter userChallengesContract;
     @Inject
-    ChallengesFragment completedChallengesFragment;
-    @Inject
     String userId;
 
     @BindView(R.id.bottomnav_userchallenges)
     BottomNavigationView bottomNavigationView;
+
+    ChallengesFragment completedChallengesFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +57,8 @@ public class UserChallengesActivity extends DaggerAppCompatActivity
                         return false;
                     }
                 });
+
+        completedChallengesFragment = new ChallengesFragment();
 
         userChallengesContract.attachView(this);
         userChallengesContract.openAuthoredChallengesView();

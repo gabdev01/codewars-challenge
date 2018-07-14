@@ -6,7 +6,7 @@ import io.reactivex.Single;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
-public interface CodeChallengesRestApi {
+public interface CodeChallengeRestApi {
 
     @GET("code-challenges/{codeChallengeId}")
     Single<CodeChallenge> getCodeChallenge(

@@ -27,6 +27,18 @@ public class CodewarsDatabaseModule {
     @Singleton
     @Provides
     UserSearchHistoryDao provideUserSearchHistoryDao(CodewarsDatabase codewarsDatabase) {
-        return codewarsDatabase.searchUserHistoryDao();
+        return codewarsDatabase.userSearchHistoryDao();
+    }
+
+    @Singleton
+    @Provides
+    CompletedChallengeDao provideCompletedChallengeDao(CodewarsDatabase codewarsDatabase) {
+        return codewarsDatabase.completedChallengeDao();
+    }
+
+    @Singleton
+    @Provides
+    CodeChallengeDao provideCodeChallengeDao(CodewarsDatabase codewarsDatabase) {
+        return codewarsDatabase.codeChallengeDao();
     }
 }

@@ -16,17 +16,27 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import codewars.tuigroup.com.codewars.R;
+import codewars.tuigroup.com.codewars.di.ActivityScoped;
 import codewars.tuigroup.com.codewars.ui.util.adapter.BaseQueuedAdapter;
 
-
+@ActivityScoped
 public class ChallengesAdapter extends BaseQueuedAdapter<CompletedChallenge,
         RecyclerView.ViewHolder> {
 
-    private ChallengesContract.Presenter challengesPresenter;
+    private OnChallengeClickListener onChallengeClickListener;
 
     @Inject
-    public ChallengesAdapter(ChallengesContract.Presenter challengesPresenter) {
-        this.challengesPresenter = challengesPresenter;
+    public ChallengesAdapter() {
+    }
+
+    public void setOnChallengeClickListener(OnChallengeClickListener listener) {
+        onChallengeClickListener = listener;
+    }
+
+    private void performChallengeClicked(CompletedChallenge challenge) {
+        if (onChallengeClickListener != null) {
+            onChallengeClickListener.onChallengeClicked(challenge);
+        }
     }
 
     @Override
@@ -39,7 +49,7 @@ public class ChallengesAdapter extends BaseQueuedAdapter<CompletedChallenge,
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.view_challenges_item, parent, false);
-        RecyclerView.ViewHolder viewHolder = new CompletedChallengesItemViewHolder(itemView, challengesPresenter);
+        RecyclerView.ViewHolder viewHolder = new CompletedChallengesItemViewHolder(itemView);
         return viewHolder;
     }
 
@@ -50,15 +60,11 @@ public class ChallengesAdapter extends BaseQueuedAdapter<CompletedChallenge,
 
     public class CompletedChallengesItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private ChallengesContract.Presenter challengePresenter;
-
         @BindView(R.id.textview_challengesitem_title)
         TextView titleTextView;
 
-        public CompletedChallengesItemViewHolder(View view, ChallengesContract.Presenter presenter) {
+        public CompletedChallengesItemViewHolder(View view) {
             super(view);
-
-            challengePresenter = presenter;
 
             ButterKnife.bind(this, itemView);
 
@@ -76,7 +82,11 @@ public class ChallengesAdapter extends BaseQueuedAdapter<CompletedChallenge,
                 return;
             }
             CompletedChallenge challenge = getItem(position);
-            challengePresenter.openChallenge(challenge);
+            performChallengeClicked(challenge);
         }
+    }
+
+    public interface OnChallengeClickListener {
+        void onChallengeClicked(CompletedChallenge challenge);
     }
 }

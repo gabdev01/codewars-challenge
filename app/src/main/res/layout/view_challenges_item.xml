@@ -8,7 +8,7 @@
     android:orientation="horizontal"
     android:paddingBottom="@dimen/searchviewitem_items_vertical_space"
     android:paddingTop="@dimen/searchviewitem_items_vertical_space"
-    tools:context=".ui.search.SearchUserActivity">
+    tools:context=".ui.challenges.UserChallengesActivity">
 
     <TextView
         android:id="@+id/textview_challengesitem_title"

@@ -1,5 +1,6 @@
 package codewars.tuigroup.com.codewars.ui.challenges;
 
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,10 +23,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import codewars.tuigroup.com.codewars.R;
 import codewars.tuigroup.com.codewars.di.ActivityScoped;
+import codewars.tuigroup.com.codewars.ui.challenge.ChallengeDetailsActivity;
 import dagger.android.support.DaggerFragment;
 
+import static codewars.tuigroup.com.codewars.ui.challenge.ChallengeDetailsActivity.EXTRA_CHALLENGE_ID;
+
 @ActivityScoped
-public class ChallengesFragment extends DaggerFragment implements ChallengesContract.View {
+public class ChallengesFragment extends DaggerFragment implements ChallengesContract.View, ChallengesAdapter.OnChallengeClickListener {
 
     @Inject
     ChallengesContract.Presenter challengesPresenter;
@@ -56,6 +60,7 @@ public class ChallengesFragment extends DaggerFragment implements ChallengesCont
                 getContext(), DividerItemDecoration.VERTICAL);
         decoration.setDrawable(new ColorDrawable(getResources().getColor(R.color.search_user_item_divider)));
         challengesRecyclerView.addItemDecoration(decoration);
+        challengesAdapter.setOnChallengeClickListener(this);
         challengesRecyclerView.setAdapter(challengesAdapter);
 
         return rootView;
@@ -107,7 +112,14 @@ public class ChallengesFragment extends DaggerFragment implements ChallengesCont
     }
 
     @Override
-    public void showChallengeView() {
+    public void showChallengeView(String challengeId) {
+        Intent intent = new Intent(getContext(), ChallengeDetailsActivity.class);
+        intent.putExtra(EXTRA_CHALLENGE_ID, challengeId);
+        startActivity(intent);
+    }
 
+    @Override
+    public void onChallengeClicked(CompletedChallenge challenge) {
+        challengesPresenter.openChallenge(challenge);
     }
 }

@@ -25,4 +25,6 @@
 
     <style name="Theme.Codewars.UserChallenges" parent="Theme.Codewars.NoActionBar" />
 
+    <style name="Theme.Codewars.ChallengeDetails" parent="Theme.Codewars.NoActionBar" />
+
 </resources>

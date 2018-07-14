@@ -19,7 +19,7 @@ public class ChallengesContract {
 
         void showChallenges(List<CompletedChallenge> challenges);
 
-        void showChallengeView();
+        void showChallengeView(String challengeId);
     }
 
     interface Presenter extends ScopedPresenter<ChallengesContract.View> {

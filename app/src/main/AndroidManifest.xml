@@ -27,6 +27,9 @@
         <activity
             android:name=".ui.challenges.UserChallengesActivity"
             android:theme="@style/Theme.Codewars.UserChallenges" />
+        <activity
+            android:name=".ui.challenge.ChallengeDetailsActivity"
+            android:theme="@style/Theme.Codewars.ChallengeDetails" />
     </application>
 
 </manifest>

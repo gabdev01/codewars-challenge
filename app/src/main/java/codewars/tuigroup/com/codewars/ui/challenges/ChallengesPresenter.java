@@ -13,14 +13,13 @@ import io.reactivex.schedulers.Schedulers;
 public class ChallengesPresenter extends BasePresenter<ChallengesContract.View>
         implements ChallengesContract.Presenter {
 
-    @Inject
-    String userId;
-
     private UserRepository userRepository;
+    private String userId;
 
     @Inject
-    public ChallengesPresenter(UserRepository userRepository) {
+    public ChallengesPresenter(UserRepository userRepository, String userId) {
         this.userRepository = userRepository;
+        this.userId = userId;
     }
 
     @Override
@@ -30,7 +29,8 @@ public class ChallengesPresenter extends BasePresenter<ChallengesContract.View>
     }
 
     private void loadChallenges() {
-        addDisposable(userRepository.getCompletedChallenges(userId, 0)
+        view.showLoadingChallengesIndicator(false);
+        addLifecycleDisposable(userRepository.getCompletedChallenges(userId, 0)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -57,6 +57,6 @@ public class ChallengesPresenter extends BasePresenter<ChallengesContract.View>
 
     @Override
     public void openChallenge(CompletedChallenge challenge) {
-        // TODO open challenge details
+        view.showChallengeView(challenge.getId());
     }
 }

@@ -1,14 +1,15 @@
 package com.tuigroup.codewars.data;
 
+import com.tuigroup.codewars.data.local.CompletedChallengeDao;
 import com.tuigroup.codewars.data.local.UserDao;
 import com.tuigroup.codewars.data.local.UserSearchHistoryDao;
+import com.tuigroup.codewars.data.local.model.UserEntity;
 import com.tuigroup.codewars.data.local.model.UserSearchHistory;
 import com.tuigroup.codewars.data.local.model.UserSearchHistoryEntity;
-import com.tuigroup.codewars.data.local.model.UserEntity;
 import com.tuigroup.codewars.data.mapper.UserMapper;
 import com.tuigroup.codewars.data.remote.UserRestApi;
 import com.tuigroup.codewars.data.remote.model.AuthoredChallengeResponse;
-import com.tuigroup.codewars.data.remote.model.CompletedChallengeResponse;
+import com.tuigroup.codewars.data.remote.model.CompletedChallenge;
 
 import java.util.Date;
 import java.util.List;
@@ -26,14 +27,17 @@ public class UserRepository {
 
     private UserRestApi userRestApi;
     private UserDao userDao;
+    private CompletedChallengeDao completedChallengeDao;
     private UserSearchHistoryDao searchUserHistoryDao;
 
     @Inject
     UserRepository(UserRestApi userRestApi,
                    UserDao userDao,
+                   CompletedChallengeDao completedChallengeDao,
                    UserSearchHistoryDao searchUserHistoryDao) {
         this.userRestApi = userRestApi;
         this.userDao = userDao;
+        this.completedChallengeDao = completedChallengeDao;
         this.searchUserHistoryDao = searchUserHistoryDao;
     }
 
