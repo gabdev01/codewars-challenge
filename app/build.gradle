@@ -72,6 +72,13 @@ dependencies {
     // Android Architecture Components - Room
     implementation "android.arch.persistence.room:runtime:$roomVersion"
 
+    // Android Architecture Components - Paging
+    implementation "android.arch.paging:runtime:$pagingVersion"
+    implementation "android.arch.paging:rxjava2:$pagingRxVersion"
+
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    implementation "android.arch.lifecycle:viewmodel:1.1.1"
+
     // Dagger 2
     compile "com.google.dagger:dagger:$dagger2Version"
     compile "com.google.dagger:dagger-android:$dagger2Version"

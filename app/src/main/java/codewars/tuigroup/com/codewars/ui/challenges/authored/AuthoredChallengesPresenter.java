@@ -12,6 +12,7 @@ import javax.inject.Inject;
 
 import codewars.tuigroup.com.codewars.ui.base.BasePresenter;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class AuthoredChallengesPresenter extends BasePresenter<AuthoredChallengesContract.View>
@@ -19,13 +20,15 @@ public class AuthoredChallengesPresenter extends BasePresenter<AuthoredChallenge
 
     private UserRepository userRepository;
     private String userId;
-    private List<AuthoredChallengeEntity> authoredChallenge;
+    private List<AuthoredChallengeEntity> authoredChallenges;
+    private CompositeDisposable challengesCompositeDisposable;
 
     @Inject
     public AuthoredChallengesPresenter(UserRepository userRepository, String userId) {
         this.userRepository = userRepository;
         this.userId = userId;
-        this.authoredChallenge = null;
+        this.authoredChallenges = null;
+        this.challengesCompositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -35,9 +38,16 @@ public class AuthoredChallengesPresenter extends BasePresenter<AuthoredChallenge
     }
 
     @Override
+    public void detachView() {
+        super.detachView();
+        challengesCompositeDisposable.clear();
+    }
+
+    @Override
     public void loadChallenges() {
         view.showLoadingChallengesIndicator(true);
-        addLifecycleDisposable(userRepository.getAuthoredChallenges(userId)
+        challengesCompositeDisposable.clear();
+        challengesCompositeDisposable.add(userRepository.getAuthoredChallenges(userId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread(), true)
                 .subscribe(
@@ -47,18 +57,18 @@ public class AuthoredChallengesPresenter extends BasePresenter<AuthoredChallenge
                                 // Maybe first load so we let the loading indicator and wait the remote data
                             } else if (authoredChallenges.status == Status.REMOTE
                                     && authoredChallenges.data.isEmpty()) {
-                                authoredChallenge = new ArrayList<>();
+                                this.authoredChallenges = new ArrayList<>();
                                 view.showLoadingChallengesIndicator(false);
                                 view.showNoChallenges();
                             } else {
-                                authoredChallenge = authoredChallenges.data;
+                                this.authoredChallenges = authoredChallenges.data;
                                 view.showLoadingChallengesIndicator(false);
-                                view.showChallenges(authoredChallenge);
+                                view.showChallenges(this.authoredChallenges);
                             }
                         },
                         throwable -> {
                             // If we already have a result no need to show an error
-                            if (authoredChallenge == null) {
+                            if (authoredChallenges == null) {
                                 boolean isThrowableHandled = false;
                                 if (throwable instanceof NoConnectivityException) {
                                     view.showLoadingChallengesIndicator(false);

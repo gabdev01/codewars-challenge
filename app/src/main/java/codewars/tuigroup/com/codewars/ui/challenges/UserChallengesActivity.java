@@ -13,6 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import codewars.tuigroup.com.codewars.R;
 import codewars.tuigroup.com.codewars.ui.challenges.authored.AuthoredChallengesFragment;
+import codewars.tuigroup.com.codewars.ui.challenges.completed.CompletedChallengesFragment;
 import dagger.android.support.DaggerAppCompatActivity;
 
 
@@ -29,7 +30,7 @@ public class UserChallengesActivity extends DaggerAppCompatActivity
     @BindView(R.id.bottomnav_userchallenges)
     BottomNavigationView bottomNavigationView;
 
-    private ChallengesFragment completedChallengesFragment;
+    private CompletedChallengesFragment completedCompletedChallengesFragment;
     private AuthoredChallengesFragment authoredChallengesFragment;
 
     @Override
@@ -51,7 +52,7 @@ public class UserChallengesActivity extends DaggerAppCompatActivity
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.menu_userchallenges_completed:
-                                replaceContentFragmentBy(completedChallengesFragment);
+                                replaceContentFragmentBy(completedCompletedChallengesFragment);
                                 return true;
                             case R.id.menu_userchallenges_authored:
                                 replaceContentFragmentBy(authoredChallengesFragment);
@@ -62,7 +63,7 @@ public class UserChallengesActivity extends DaggerAppCompatActivity
                 });
 
 
-        completedChallengesFragment = new ChallengesFragment();
+        completedCompletedChallengesFragment = new CompletedChallengesFragment();
         authoredChallengesFragment = new AuthoredChallengesFragment();
 
         userChallengesContract.attachView(this);
@@ -73,7 +74,7 @@ public class UserChallengesActivity extends DaggerAppCompatActivity
     private void replaceContentFragmentBy(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.linearlayout_userchallenges_content, fragment)
+                .replace(R.id.framelayout_userchallenges_content, fragment)
                 .commit();
     }
 
@@ -108,6 +109,6 @@ public class UserChallengesActivity extends DaggerAppCompatActivity
 
     @Override
     public void showCompletedChallengesView() {
-        replaceContentFragmentBy(completedChallengesFragment);
+        replaceContentFragmentBy(completedCompletedChallengesFragment);
     }
 }

@@ -22,11 +22,11 @@ public interface CodeChallengeDao {
     Flowable<List<CodeChallengeEntity>> getChallengeById(String id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(CodeChallengeEntity... user);
+    void insert(CodeChallengeEntity... challenge);
 
     @Update
-    void update(CodeChallengeEntity... user);
+    void update(CodeChallengeEntity... challenge);
 
     @Delete
-    void delete(CodeChallengeEntity... user);
+    void delete(CodeChallengeEntity... challenge);
 }

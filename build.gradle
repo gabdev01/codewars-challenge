@@ -15,6 +15,8 @@ buildscript {
     ext.okHttpVersion = '3.8.0'
     ext.roomVersion = '1.1.0'
     ext.dagger2Version = '2.15'
+    ext.pagingVersion = '1.0.1'
+    ext.pagingRxVersion = '1.0.1'
 
     repositories {
         google()

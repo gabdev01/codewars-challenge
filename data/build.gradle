@@ -77,6 +77,10 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger2Version"
     kapt  "com.google.dagger:dagger-android-support:$dagger2Version"
 
+    // Android Architecture Components - Paging
+    implementation "android.arch.paging:runtime:$pagingVersion"
+    implementation "android.arch.paging:rxjava2:$pagingRxVersion"
+
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
 }
 repositories {

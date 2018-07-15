@@ -1,10 +1,15 @@
 package com.tuigroup.codewars.data;
 
+import android.arch.paging.DataSource;
+import android.arch.paging.PagedList;
+import android.arch.paging.RxPagedListBuilder;
+
 import com.tuigroup.codewars.data.local.AuthoredChallengeDao;
 import com.tuigroup.codewars.data.local.CompletedChallengeDao;
 import com.tuigroup.codewars.data.local.UserDao;
 import com.tuigroup.codewars.data.local.UserSearchHistoryDao;
 import com.tuigroup.codewars.data.local.model.AuthoredChallengeEntity;
+import com.tuigroup.codewars.data.local.model.CompletedChallengeEntity;
 import com.tuigroup.codewars.data.local.model.UserEntity;
 import com.tuigroup.codewars.data.local.model.UserSearchHistory;
 import com.tuigroup.codewars.data.local.model.UserSearchHistoryEntity;
@@ -12,7 +17,6 @@ import com.tuigroup.codewars.data.mapper.AuthoredChallengeMapper;
 import com.tuigroup.codewars.data.mapper.UserMapper;
 import com.tuigroup.codewars.data.remote.UserRestApi;
 import com.tuigroup.codewars.data.remote.model.AuthoredChallenge;
-import com.tuigroup.codewars.data.remote.model.CompletedChallenge;
 import com.tuigroup.codewars.data.util.NetworkBoundSource;
 import com.tuigroup.codewars.data.util.Resource;
 
@@ -24,13 +28,14 @@ import javax.inject.Singleton;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.functions.Function;
 
 @Singleton
 public class UserRepository {
 
-    private static UserRepository INSTANCE;
+    private static final int COMPLETED_CHALLENGES_PAGE_SIZE = 50;
 
     private UserRestApi userRestApi;
     private UserDao userDao;
@@ -64,21 +69,31 @@ public class UserRepository {
                 });
     }
 
+    public Flowable<List<UserSearchHistory>> getLastUsersSearched(int limit) {
+        return searchUserHistoryDao.getLastUsersSearched(limit);
+    }
+
     public Flowable<List<UserSearchHistory>> getLastUsersSearched(UserOrderBy orderBy, int limit) {
-        if (orderBy == UserOrderBy.HIGHEST_RANK)  {
+        if (orderBy == UserOrderBy.HIGHEST_RANK) {
             return searchUserHistoryDao.getLastUsersSearchedByRank(limit);
         } else {
             return searchUserHistoryDao.getLastUsersSearched(limit);
         }
     }
 
-    public Flowable<List<UserSearchHistory>> getLastUsersSearched(int limit) {
-        return searchUserHistoryDao.getLastUsersSearched(limit);
-    }
-
-    public Single<List<CompletedChallenge>> getCompletedChallenges(String username, int page) {
-        return userRestApi.getCompletedChallenges(username, page)
-                .map(response -> response.getData());
+    public Observable<PagedList<CompletedChallengeEntity>> getCompletedChallenges(CompletedChallengePageBoundaryCallback callback, String username) {
+        callback.setUsername(username);
+        DataSource.Factory localData = completedChallengeDao.getCompletedChallengesByUser2(callback.getUsername());
+        PagedList.Config pagedList = new PagedList.Config.Builder()
+                .setPageSize(COMPLETED_CHALLENGES_PAGE_SIZE)
+                .setEnablePlaceholders(false)
+                .setInitialLoadSizeHint(COMPLETED_CHALLENGES_PAGE_SIZE * 3)
+                .setPrefetchDistance(COMPLETED_CHALLENGES_PAGE_SIZE)
+                .build();
+        Observable<PagedList<CompletedChallengeEntity>> result = new RxPagedListBuilder<>(localData, pagedList)
+                .setBoundaryCallback(callback)
+                .buildObservable();
+        return result;
     }
 
     public Flowable<Resource<List<AuthoredChallengeEntity>>> getAuthoredChallenges(String username) {

@@ -6,6 +6,9 @@ import codewars.tuigroup.com.codewars.ui.challenges.authored.AuthoredChallengesA
 import codewars.tuigroup.com.codewars.ui.challenges.authored.AuthoredChallengesContract;
 import codewars.tuigroup.com.codewars.ui.challenges.authored.AuthoredChallengesFragment;
 import codewars.tuigroup.com.codewars.ui.challenges.authored.AuthoredChallengesPresenter;
+import codewars.tuigroup.com.codewars.ui.challenges.completed.CompletedChallengesContract;
+import codewars.tuigroup.com.codewars.ui.challenges.completed.CompletedChallengesFragment;
+import codewars.tuigroup.com.codewars.ui.challenges.completed.CompletedChallengesPresenter;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -21,7 +24,7 @@ public class UserChallengesModule {
 
         @Binds
         @ActivityScoped
-        ChallengesContract.Presenter challengesPresenter(ChallengesPresenter presenter);
+        CompletedChallengesContract.Presenter completedChallengesPresenter(CompletedChallengesPresenter presenter);
 
         @Binds
         @ActivityScoped
@@ -33,7 +36,7 @@ public class UserChallengesModule {
 
         @ContributesAndroidInjector
         @FragmentScoped
-        ChallengesFragment challengesFragment();
+        CompletedChallengesFragment completedChallengesFragment();
 
         @ContributesAndroidInjector
         @FragmentScoped
@@ -44,12 +47,6 @@ public class UserChallengesModule {
     @ActivityScoped
     static String provideUserId(UserChallengesActivity activity) {
         return activity.getIntent().getStringExtra(EXTRA_USER_ID);
-    }
-
-    @Provides
-    @ActivityScoped
-    static ChallengesAdapter provideChallengesTempAdapter() {
-        return new ChallengesAdapter();
     }
 
     @ActivityScoped

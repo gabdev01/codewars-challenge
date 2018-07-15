@@ -1,5 +1,6 @@
 package com.tuigroup.codewars.data.local;
 
+import android.arch.paging.DataSource;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -19,12 +20,19 @@ public interface CompletedChallengeDao {
     @Query("SELECT * FROM completed_challenge WHERE user_id == :username")
     Flowable<List<CompletedChallengeEntity>> getCompletedChallengesByUser(String username);
 
+    @Query("SELECT * FROM completed_challenge WHERE user_id == :username")
+     DataSource.Factory<Integer, CompletedChallengeEntity> getCompletedChallengesByUser2(String username);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(CompletedChallengeEntity... user);
+    void insert(CompletedChallengeEntity... challenge);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<CompletedChallengeEntity> challenges);
+
 
     @Update
-    void update(CompletedChallengeEntity... user);
+    void update(CompletedChallengeEntity... challenge);
 
     @Delete
-    void delete(CompletedChallengeEntity... user);
+    void delete(CompletedChallengeEntity... challenge);
 }

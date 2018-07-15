@@ -1,0 +1,21 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <codewars.tuigroup.com.codewars.ui.widget.ContentLoadingView
+        android:id="@+id/contentloadingview_completedchallenges"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/activity_default_padding"
+        android:visibility="visible" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_completedchallenges"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_default_padding"
+        android:paddingTop="@dimen/activity_default_padding"
+        android:scrollbars="vertical"
+        android:visibility="invisible" />
+
+</FrameLayout>

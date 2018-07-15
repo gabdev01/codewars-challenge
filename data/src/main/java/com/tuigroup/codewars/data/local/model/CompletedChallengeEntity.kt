@@ -19,6 +19,6 @@ data class CompletedChallengeEntity(
         val completedAt: String?,
         @ColumnInfo(name = "completed_languages")
         val completedLanguages: List<String>?,
-        @ColumnInfo(name = "index_in_response")
-        var indexInResponse: Int = -1
+        @ColumnInfo(name = "page_index_in_response")
+        var pageIndexInResponse: Int = -1
 )

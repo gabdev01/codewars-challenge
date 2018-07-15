@@ -20,14 +20,14 @@ public interface AuthoredChallengeDao {
     Flowable<List<AuthoredChallengeEntity>> getAuthoredChallenge(String username);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(AuthoredChallengeEntity... user);
+    void insert(AuthoredChallengeEntity... challenge);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<AuthoredChallengeEntity> user);
+    void insertAll(List<AuthoredChallengeEntity> challenges);
 
     @Update
-    void update(AuthoredChallengeEntity... user);
+    void update(AuthoredChallengeEntity... challenge);
 
     @Delete
-    void delete(AuthoredChallengeEntity... user);
+    void delete(AuthoredChallengeEntity... challenge);
 }
