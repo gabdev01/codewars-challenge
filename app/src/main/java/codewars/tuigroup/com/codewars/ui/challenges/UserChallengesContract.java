@@ -7,15 +7,15 @@ public class UserChallengesContract {
 
     interface View extends BaseView<UserChallengesContract.Presenter> {
 
-        void showAuthoredChallengesView();
-
         void showCompletedChallengesView();
+
+        void showAuthoredChallengesView();
     }
 
     interface Presenter extends ScopedPresenter<UserChallengesContract.View> {
 
-        void openAuthoredChallengesView();
-
         void openCompletedChallengesView();
+
+        void openAuthoredChallengesView();
     }
 }

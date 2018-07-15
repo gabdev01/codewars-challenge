@@ -60,7 +60,6 @@ public class ChallengeDetailsPresenter extends BasePresenter<ChallengeDetailsCon
                             }
                         },
                         throwable -> {
-                            logError(throwable);
                             // If we already have a result no need to show an error
                             if (challenge == null) {
                                 boolean isThrowableHandled = false;

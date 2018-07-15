@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearlayout_authoredchallengesitem_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:orientation="horizontal"
+    android:padding="@dimen/authoredchallengeitem_padding"
+    tools:context=".ui.challenges.UserChallengesActivity">
+
+    <TextView
+        android:id="@+id/textview_authoredchallengesitem_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/primary_text_light_normal"
+        android:textSize="@dimen/font_size_normal" />
+
+</LinearLayout>

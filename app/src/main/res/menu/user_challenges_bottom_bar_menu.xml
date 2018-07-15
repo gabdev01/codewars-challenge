@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/menu_userchallenges_authored"
-        android:icon="@drawable/ic_challenge_authored_24"
-        android:title="@string/user_challenges_menu_authored" />
-
-    <item
         android:id="@+id/menu_userchallenges_completed"
         android:icon="@drawable/ic_challenge_completed_24"
         android:title="@string/user_challenges_menu_completed" />
+    <item
+        android:id="@+id/menu_userchallenges_authored"
+        android:icon="@drawable/ic_challenge_authored_24"
+        android:title="@string/user_challenges_menu_authored" />
 </menu>

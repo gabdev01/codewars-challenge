@@ -56,6 +56,6 @@ public class CodeChallengeRepository {
             public Function<CodeChallenge, Optional<CodeChallengeEntity>> mapper() {
                 return challenge -> Optional.of(CodeChallengeMapper.mapFromApiToEntity(challenge));
             }
-        }, BackpressureStrategy.BUFFER);
+        }, BackpressureStrategy.LATEST);
     }
 }

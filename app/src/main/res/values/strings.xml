@@ -18,8 +18,9 @@
 
     <!-- User challenges view -->
     <string name="user_challenges_menu_completed">Completed challenges</string>
-    <string name="user_challenges_menu_authored">Authored challeng</string>
+    <string name="user_challenges_menu_authored">Authored challenges</string>
 
     <!-- Content loading widget -->
     <string name="widget_content_loading_retry">Retry</string>
+    <string name="authored_challenges_empty_label">No authored challenges here.</string>
 </resources>

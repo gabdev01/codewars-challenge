@@ -41,4 +41,10 @@ public class CodewarsDatabaseModule {
     CodeChallengeDao provideCodeChallengeDao(CodewarsDatabase codewarsDatabase) {
         return codewarsDatabase.codeChallengeDao();
     }
+
+    @Singleton
+    @Provides
+    AuthoredChallengeDao provideAuthoredChallengeDao(CodewarsDatabase codewarsDatabase) {
+        return codewarsDatabase.authoredChallengeDao();
+    }
 }

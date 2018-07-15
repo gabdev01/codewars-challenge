@@ -12,13 +12,13 @@ data class CompletedChallengeEntity(
         @ColumnInfo(name = "user_id")
         val userId: String,
         @ColumnInfo(name = "name")
-        val name: String,
+        val name: String?,
         @ColumnInfo(name = "slug")
-        val slug: String,
+        val slug: String?,
         @ColumnInfo(name = "completed_at")
-        val completedAt: String,
+        val completedAt: String?,
         @ColumnInfo(name = "completed_languages")
-        val completedLanguages: List<String>,
+        val completedLanguages: List<String>?,
         @ColumnInfo(name = "index_in_response")
         var indexInResponse: Int = -1
 )

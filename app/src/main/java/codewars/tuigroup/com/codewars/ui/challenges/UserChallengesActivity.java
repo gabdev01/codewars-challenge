@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import codewars.tuigroup.com.codewars.R;
+import codewars.tuigroup.com.codewars.ui.challenges.authored.AuthoredChallengesFragment;
 import dagger.android.support.DaggerAppCompatActivity;
 
 
@@ -28,7 +29,8 @@ public class UserChallengesActivity extends DaggerAppCompatActivity
     @BindView(R.id.bottomnav_userchallenges)
     BottomNavigationView bottomNavigationView;
 
-    ChallengesFragment completedChallengesFragment;
+    private ChallengesFragment completedChallengesFragment;
+    private AuthoredChallengesFragment authoredChallengesFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,21 +50,24 @@ public class UserChallengesActivity extends DaggerAppCompatActivity
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
-                            case R.id.menu_userchallenges_authored:
-                                return true;
                             case R.id.menu_userchallenges_completed:
                                 replaceContentFragmentBy(completedChallengesFragment);
+                                return true;
+                            case R.id.menu_userchallenges_authored:
+                                replaceContentFragmentBy(authoredChallengesFragment);
                                 return true;
                         }
                         return false;
                     }
                 });
 
+
         completedChallengesFragment = new ChallengesFragment();
+        authoredChallengesFragment = new AuthoredChallengesFragment();
 
         userChallengesContract.attachView(this);
-        userChallengesContract.openAuthoredChallengesView();
-        bottomNavigationView.setSelectedItemId(R.id.menu_userchallenges_authored);
+        userChallengesContract.openCompletedChallengesView();
+        bottomNavigationView.setSelectedItemId(R.id.menu_userchallenges_completed);
     }
 
     private void replaceContentFragmentBy(Fragment fragment) {
@@ -98,8 +103,7 @@ public class UserChallengesActivity extends DaggerAppCompatActivity
 
     @Override
     public void showAuthoredChallengesView() {
-        // TODO Change by the expected fragment (authored challenges)
-        replaceContentFragmentBy(completedChallengesFragment);
+        replaceContentFragmentBy(authoredChallengesFragment);
     }
 
     @Override
