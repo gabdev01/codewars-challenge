@@ -10,8 +10,8 @@
         android:id="@+id/cardview_searchuser_searchresult"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:foreground="?selectableItemBackground"
         android:layout_marginBottom="@dimen/activity_default_horizontal_spacing"
+        android:foreground="?selectableItemBackground"
         app:cardBackgroundColor="@color/search_user_card_view_background"
         app:cardCornerRadius="@dimen/cardview_default_radius"
         app:cardElevation="@dimen/cardview_default_elevation"
@@ -59,9 +59,9 @@
                 <include
                     layout="@layout/view_search_user_item"
                     android:layout_width="match_parent"
-                    android:visibility="invisible"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:visibility="invisible" />
 
             </FrameLayout>
 
@@ -84,15 +84,32 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/cardview_default_padding"
-                android:text="@string/search_user_previous_searches_label"
-                android:textAllCaps="true"
-                android:textColor="@color/secondary_text_light_normal"
-                android:textSize="@dimen/font_size_caption"
-                android:textStyle="bold" />
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/search_user_previous_searches_label"
+                    android:textAllCaps="true"
+                    android:textColor="@color/secondary_text_light_normal"
+                    android:textSize="@dimen/font_size_caption"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/imageview_searchuser_sortsearchhistory"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="8dp"
+                    android:foreground="?selectableItemBackground"
+                    android:src="@drawable/ic_sort_24" />
+
+            </LinearLayout>
 
             <FrameLayout
                 android:layout_width="match_parent"

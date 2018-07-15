@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -22,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.tuigroup.codewars.data.UserRepository;
 import com.tuigroup.codewars.data.local.model.UserEntity;
 import com.tuigroup.codewars.data.local.model.UserSearchHistory;
 
@@ -61,6 +63,8 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
     TextView clanTextView;
     @BindView(R.id.textview_searchuseritem_honor)
     TextView honorTextView;
+    @BindView(R.id.imageview_searchuser_sortsearchhistory)
+    ImageView sortSearchHistoryImageView;
     @BindView(R.id.textview_searchuser_searchhistory)
     TextView searchHistoryTextView;
     @BindView(R.id.recyclerview_searchuser_searchhistory)
@@ -135,6 +139,7 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
 
         clearSearchImageView.setOnClickListener(this);
         searchResultCardView.setOnClickListener(this);
+        sortSearchHistoryImageView.setOnClickListener(this);
 
         searchResultCardView.setClickable(false);
 
@@ -165,6 +170,8 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
             performClearSearch();
         } else if (v.getId() == R.id.cardview_searchuser_searchresult) {
             performOpenUserFound();
+        } else if (v.getId() == R.id.imageview_searchuser_sortsearchhistory) {
+            performSortSearchHistory();
         }
     }
 
@@ -180,6 +187,24 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
 
     private void performClearSearch() {
         searchEditText.getText().clear();
+    }
+
+    private void performSortSearchHistory() {
+        String[] sortMenus = new String[2];
+        sortMenus[0] = getResources().getString(R.string.search_user_sort_by_date);
+        sortMenus[1] = getResources().getString(R.string.search_user_sort_by_rank);
+        AlertDialog.Builder sortDialog = new AlertDialog.Builder(this);
+        sortDialog.setTitle(getResources().getString(R.string.search_user_sort_title));
+        sortDialog.setItems(sortMenus, (dialog, index) -> {
+            if (index == 1) {
+                searchUserPresenter.loadSearchHistory(UserRepository.UserOrderBy.HIGHEST_RANK);
+            } else {
+                searchUserPresenter.loadSearchHistory(UserRepository.UserOrderBy.DATE_ADDED);
+            }
+            dialog.dismiss();
+        });
+        AlertDialog alert = sortDialog.create();
+        alert.show();
     }
 
     @Override

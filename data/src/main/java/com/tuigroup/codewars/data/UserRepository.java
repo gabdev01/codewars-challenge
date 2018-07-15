@@ -64,6 +64,14 @@ public class UserRepository {
                 });
     }
 
+    public Flowable<List<UserSearchHistory>> getLastUsersSearched(UserOrderBy orderBy, int limit) {
+        if (orderBy == UserOrderBy.HIGHEST_RANK)  {
+            return searchUserHistoryDao.getLastUsersSearchedByRank(limit);
+        } else {
+            return searchUserHistoryDao.getLastUsersSearched(limit);
+        }
+    }
+
     public Flowable<List<UserSearchHistory>> getLastUsersSearched(int limit) {
         return searchUserHistoryDao.getLastUsersSearched(limit);
     }
@@ -96,5 +104,10 @@ public class UserRepository {
                 return challenge -> AuthoredChallengeMapper.mapFromApiToEntity(challenge, username);
             }
         }, BackpressureStrategy.LATEST);
+    }
+
+    public enum UserOrderBy {
+        DATE_ADDED,
+        HIGHEST_RANK
     }
 }

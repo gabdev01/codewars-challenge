@@ -1,7 +1,8 @@
 package codewars.tuigroup.com.codewars.ui.search;
 
-import com.tuigroup.codewars.data.local.model.UserSearchHistory;
+import com.tuigroup.codewars.data.UserRepository;
 import com.tuigroup.codewars.data.local.model.UserEntity;
+import com.tuigroup.codewars.data.local.model.UserSearchHistory;
 
 import java.util.List;
 
@@ -34,6 +35,8 @@ public class SearchUserContract {
     interface Presenter extends ScopedPresenter<SearchUserContract.View> {
 
         void searchUser(String username);
+
+        void loadSearchHistory(UserRepository.UserOrderBy orderBy);
 
         void openUserFoundChallenges();
 

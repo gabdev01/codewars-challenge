@@ -33,13 +33,12 @@ public class SearchUserPresenter extends BasePresenter<SearchUserContract.View>
     @Override
     public void subscribe() {
         super.subscribe();
-        // TODO Use lifecycle from Arch library
-
-        loadSearchHistory();
+        loadSearchHistory(UserRepository.UserOrderBy.DATE_ADDED);
     }
 
-    private void loadSearchHistory() {
-        addDisposable(userRepository.getLastUsersSearched(SEARCH_USER_HISTORY_LIMIT)
+    @Override
+    public void loadSearchHistory(UserRepository.UserOrderBy orderBy) {
+        addDisposable(userRepository.getLastUsersSearched(orderBy, SEARCH_USER_HISTORY_LIMIT)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
