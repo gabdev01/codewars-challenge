@@ -105,7 +105,8 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
             searchEditText.setCursorVisible(true);
         });
         searchEditText.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH
+                    && searchEditText.getText().length() > 0) {
                 ViewUtils.hideKeyboard(searchEditText);
                 performSearch();
             }

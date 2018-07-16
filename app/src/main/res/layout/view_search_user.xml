@@ -88,13 +88,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/cardview_default_padding"
-                android:gravity="center"
+                android:gravity="top"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:paddingTop="8dp"
                     android:text="@string/search_user_previous_searches_label"
                     android:textAllCaps="true"
                     android:textColor="@color/secondary_text_light_normal"
