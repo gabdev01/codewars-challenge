@@ -3,6 +3,7 @@ package codewars.tuigroup.com.codewars.ui.search;
 import com.tuigroup.codewars.data.UserRepositoryContract;
 import com.tuigroup.codewars.data.local.model.UserEntity;
 import com.tuigroup.codewars.data.local.model.UserSearchHistory;
+import com.tuigroup.codewars.data.util.UserOrderBy;
 
 import org.junit.After;
 import org.junit.Before;
@@ -69,9 +70,9 @@ public class SearchUserPresenterTest {
     public void getNoSearchHistoryFromRepositoryAndLoadIntoView() {
         doReturn(Flowable.just(new ArrayList<>()))
                 .when(userRepository)
-                .getLastUsersSearched(UserRepositoryContract.UserOrderBy.DATE_ADDED, SEARCH_USER_HISTORY_LIMIT);
+                .getLastUsersSearched(UserOrderBy.DATE_ADDED, SEARCH_USER_HISTORY_LIMIT);
 
-        searchUserPresenter.loadSearchHistory(UserRepositoryContract.UserOrderBy.DATE_ADDED);
+        searchUserPresenter.loadSearchHistory(UserOrderBy.DATE_ADDED);
 
         testScheduler.triggerActions();
 
@@ -83,9 +84,9 @@ public class SearchUserPresenterTest {
         List<UserSearchHistory> result = TestUtil.createUserSearchHistoryList();
         doReturn(Flowable.just(result))
                 .when(userRepository)
-                .getLastUsersSearched(UserRepositoryContract.UserOrderBy.DATE_ADDED, SEARCH_USER_HISTORY_LIMIT);
+                .getLastUsersSearched(UserOrderBy.DATE_ADDED, SEARCH_USER_HISTORY_LIMIT);
 
-        searchUserPresenter.loadSearchHistory(UserRepositoryContract.UserOrderBy.DATE_ADDED);
+        searchUserPresenter.loadSearchHistory(UserOrderBy.DATE_ADDED);
 
         testScheduler.triggerActions();
 
@@ -96,9 +97,9 @@ public class SearchUserPresenterTest {
     public void getSearchHistoryWithErrorFromRepositoryAndLoadIntoView() {
         doReturn(Flowable.just(new Throwable()))
                 .when(userRepository)
-                .getLastUsersSearched(UserRepositoryContract.UserOrderBy.DATE_ADDED, SEARCH_USER_HISTORY_LIMIT);
+                .getLastUsersSearched(UserOrderBy.DATE_ADDED, SEARCH_USER_HISTORY_LIMIT);
 
-        searchUserPresenter.loadSearchHistory(UserRepositoryContract.UserOrderBy.DATE_ADDED);
+        searchUserPresenter.loadSearchHistory(UserOrderBy.DATE_ADDED);
 
         testScheduler.triggerActions();
 

@@ -14,7 +14,8 @@ import codewars.tuigroup.com.codewars.ui.util.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
 @ActivityScoped
-public class ChallengeDetailsPresenter extends BasePresenter<ChallengeDetailsContract.View>
+public class ChallengeDetailsPresenter
+        extends BasePresenter<ChallengeDetailsContract.View, ChallengeDetailsContract.State>
         implements ChallengeDetailsContract.Presenter, LifecycleObserver {
 
     private CodeChallengeRepositoryContract codeChallengeRepository;
@@ -38,6 +39,11 @@ public class ChallengeDetailsPresenter extends BasePresenter<ChallengeDetailsCon
         super.subscribe();
 
         loadChallenge();
+    }
+
+    @Override
+    public ChallengeDetailsContract.State getState() {
+        return null;
     }
 
     @Override

@@ -14,7 +14,8 @@ import codewars.tuigroup.com.codewars.ui.base.BasePresenter;
 import codewars.tuigroup.com.codewars.ui.util.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class AuthoredChallengesPresenter extends BasePresenter<AuthoredChallengesContract.View>
+public class AuthoredChallengesPresenter
+        extends BasePresenter<AuthoredChallengesContract.View, AuthoredChallengesContract.State>
         implements AuthoredChallengesContract.Presenter {
 
     private UserRepositoryContract userRepository;
@@ -35,6 +36,11 @@ public class AuthoredChallengesPresenter extends BasePresenter<AuthoredChallenge
     public void subscribe() {
         super.subscribe();
         loadChallenges();
+    }
+
+    @Override
+    public AuthoredChallengesContract.State getState() {
+        return null;
     }
 
     @Override

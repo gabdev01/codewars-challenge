@@ -16,7 +16,6 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.search.SearchUserActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.Codewars.SearchUser"
             android:windowSoftInputMode="stateHidden|adjustNothing">
             <intent-filter>
@@ -27,11 +26,9 @@
         </activity>
         <activity
             android:name=".ui.challenges.UserChallengesActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.Codewars.UserChallenges" />
         <activity
             android:name=".ui.challenge.ChallengeDetailsActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.Codewars.ChallengeDetails" />
     </application>
 

@@ -8,7 +8,7 @@ import io.reactivex.disposables.Disposable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public abstract class BasePresenter<View extends BaseView> implements ScopedPresenter<View> {
+public abstract class BasePresenter<View extends BaseView, State extends BaseState> implements ScopedPresenter<View, State> {
 
     protected SchedulerProvider schedulerProvider;
     protected View view;
@@ -22,6 +22,12 @@ public abstract class BasePresenter<View extends BaseView> implements ScopedPres
     @Override
     @CallSuper
     public void attachView(View view) {
+        attachView(view, null);
+    }
+
+    @Override
+    @CallSuper
+    public void attachView(View view, State state) {
         this.view = checkNotNull(view, "View cannot be null!");
     }
 

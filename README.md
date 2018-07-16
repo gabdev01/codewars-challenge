@@ -11,5 +11,5 @@ This Android app uses :
  * Java and Kotlin for the model classes
 
 Application notes :
- * The app is compatible offline
- * Need some extra work to have the app survive configuration change and process deaths initiated by the system
+ * The app is  compatible offline
+ * The app is compatible configuration change such as orientation change

@@ -13,7 +13,8 @@ import codewars.tuigroup.com.codewars.ui.base.BasePresenter;
 import codewars.tuigroup.com.codewars.ui.util.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class CompletedChallengesPresenter extends BasePresenter<CompletedChallengesContract.View>
+public class CompletedChallengesPresenter
+        extends BasePresenter<CompletedChallengesContract.View, CompletedChallengesContract.State>
         implements CompletedChallengesContract.Presenter, ObservableBoundaryCallback.BoundaryCallbackRequestListener {
 
     private UserRepositoryContract userRepository;
@@ -38,6 +39,11 @@ public class CompletedChallengesPresenter extends BasePresenter<CompletedChallen
     public void subscribe() {
         super.subscribe();
         loadChallenges();
+    }
+
+    @Override
+    public CompletedChallengesContract.State getState() {
+        return null;
     }
 
     @Override

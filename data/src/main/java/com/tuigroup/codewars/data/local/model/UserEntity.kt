@@ -3,7 +3,10 @@ package com.tuigroup.codewars.data.local.model
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @Entity(tableName = "user")
 data class UserEntity(
         @PrimaryKey
@@ -17,4 +20,4 @@ data class UserEntity(
         val clan: String? = null,
         @ColumnInfo(name = "leaderboard_position")
         val leaderboardPosition: Int
-)
+) : Parcelable

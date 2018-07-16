@@ -15,6 +15,7 @@ import com.tuigroup.codewars.data.remote.model.AuthoredChallengeResponse;
 import com.tuigroup.codewars.data.remote.model.User;
 import com.tuigroup.codewars.data.util.Resource;
 import com.tuigroup.codewars.data.util.Status;
+import com.tuigroup.codewars.data.util.UserOrderBy;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -85,7 +86,7 @@ public class UsersRepositoryTest {
         Mockito.when(searchUserHistoryDao.getLastUsersSearched(5)).thenReturn(Flowable.just(usersSearchHistory));
 
         TestSubscriber<List<UserSearchHistory>> testObserver = userRepository.getLastUsersSearched(
-                UserRepositoryContract.UserOrderBy.DATE_ADDED, 5).test();
+                UserOrderBy.DATE_ADDED, 5).test();
 
         testObserver.assertValue(usersSearchHistory);
     }

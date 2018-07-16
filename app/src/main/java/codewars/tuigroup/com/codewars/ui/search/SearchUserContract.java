@@ -1,17 +1,19 @@
 package codewars.tuigroup.com.codewars.ui.search;
 
-import com.tuigroup.codewars.data.UserRepositoryContract;
 import com.tuigroup.codewars.data.local.model.UserEntity;
 import com.tuigroup.codewars.data.local.model.UserSearchHistory;
+import com.tuigroup.codewars.data.util.UserOrderBy;
 
 import java.util.List;
 
+import codewars.tuigroup.com.codewars.ui.base.BaseState;
 import codewars.tuigroup.com.codewars.ui.base.BaseView;
 import codewars.tuigroup.com.codewars.ui.base.ScopedPresenter;
+import codewars.tuigroup.com.codewars.ui.util.RequestResultType;
 
 public class SearchUserContract {
 
-    interface View extends BaseView<SearchUserContract.Presenter> {
+    interface View extends BaseView<Presenter> {
 
         void showSearchUserIndicator(boolean enabled);
 
@@ -32,14 +34,23 @@ public class SearchUserContract {
         void showUserChallengesView(String username);
     }
 
-    interface Presenter extends ScopedPresenter<SearchUserContract.View> {
+    interface Presenter extends ScopedPresenter<View, State> {
 
         void searchUser(String username);
 
-        void loadSearchHistory(UserRepositoryContract.UserOrderBy orderBy);
+        void loadSearchHistory(UserOrderBy orderBy);
 
         void openUserFoundChallenges();
 
         void openUserChallenges(UserEntity user);
+    }
+
+    interface State extends BaseState {
+
+        UserOrderBy getUsersSearchedOrderBy();
+
+        UserEntity getUserFound();
+
+        RequestResultType getSearchUserResultType();
     }
 }

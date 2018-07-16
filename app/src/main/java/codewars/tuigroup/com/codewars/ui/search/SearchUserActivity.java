@@ -23,9 +23,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.tuigroup.codewars.data.UserRepositoryContract;
 import com.tuigroup.codewars.data.local.model.UserEntity;
 import com.tuigroup.codewars.data.local.model.UserSearchHistory;
+import com.tuigroup.codewars.data.util.UserOrderBy;
 
 import java.util.List;
 
@@ -35,11 +35,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import codewars.tuigroup.com.codewars.R;
 import codewars.tuigroup.com.codewars.ui.challenges.UserChallengesActivity;
+import codewars.tuigroup.com.codewars.ui.util.RequestResultType;
 import codewars.tuigroup.com.codewars.ui.util.ViewUtils;
 import dagger.android.support.DaggerAppCompatActivity;
 
 
 public class SearchUserActivity extends DaggerAppCompatActivity implements View.OnClickListener, SearchUserContract.View {
+
+    private static final String KEY_STATE_USERS_SEARCHED_ORDER_BY = "com.tuigroup.codewars.KEY_STATE_USERS_SEARCHED_ORDER_BY";
+    private static final String KEY_STATE_USER_FOUND = "com.tuigroup.codewars.KEY_STATE_USER_FOUND";
+    private static final String KEY_STATE_SEARCH_USER_REQUEST_RESULT_TYPE = "com.tuigroup.codewars.KEY_STATE_SEARCH_USER_REQUEST_RESULT_TYPE";
 
     @Inject
     SearchUserContract.Presenter searchUserPresenter;
@@ -144,7 +149,13 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
 
         searchResultCardView.setClickable(false);
 
-        searchUserPresenter.attachView(this);
+        searchUserPresenter.attachView(this, savedInstanceState != null ? readFromBundle(savedInstanceState) : null);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        writeToBundle(outState, searchUserPresenter.getState());
     }
 
     @Override
@@ -198,14 +209,38 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
         sortDialog.setTitle(getResources().getString(R.string.search_user_sort_title));
         sortDialog.setItems(sortMenus, (dialog, index) -> {
             if (index == 1) {
-                searchUserPresenter.loadSearchHistory(UserRepositoryContract.UserOrderBy.HIGHEST_RANK);
+                searchUserPresenter.loadSearchHistory(UserOrderBy.HIGHEST_RANK);
             } else {
-                searchUserPresenter.loadSearchHistory(UserRepositoryContract.UserOrderBy.DATE_ADDED);
+                searchUserPresenter.loadSearchHistory(UserOrderBy.DATE_ADDED);
             }
             dialog.dismiss();
         });
         AlertDialog alert = sortDialog.create();
         alert.show();
+    }
+
+    private SearchUserContract.State readFromBundle(Bundle savedInstanceState) {
+        UserOrderBy orderBy = UserOrderBy
+                .from(savedInstanceState.getInt(KEY_STATE_USERS_SEARCHED_ORDER_BY));
+        UserEntity userEntity = savedInstanceState.getParcelable(KEY_STATE_USER_FOUND);
+        RequestResultType resultType = RequestResultType
+                .from(savedInstanceState.getInt(KEY_STATE_SEARCH_USER_REQUEST_RESULT_TYPE));
+        return new SearchUserState(orderBy, userEntity, resultType);
+    }
+
+    private void writeToBundle(Bundle outState, SearchUserContract.State state) {
+        if (state == null) {
+            return;
+        }
+        if (state.getUsersSearchedOrderBy() != null) {
+            outState.putInt(KEY_STATE_USERS_SEARCHED_ORDER_BY, state.getUsersSearchedOrderBy().getValue());
+        }
+        if (state.getUserFound() != null) {
+            outState.putParcelable(KEY_STATE_USER_FOUND, state.getUserFound());
+        }
+        if (state.getSearchUserResultType() != null) {
+            outState.putInt(KEY_STATE_SEARCH_USER_REQUEST_RESULT_TYPE, state.getSearchUserResultType().getValue());
+        }
     }
 
     @Override

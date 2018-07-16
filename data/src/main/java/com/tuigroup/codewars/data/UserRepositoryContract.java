@@ -8,6 +8,7 @@ import com.tuigroup.codewars.data.local.model.UserEntity;
 import com.tuigroup.codewars.data.local.model.UserSearchHistory;
 import com.tuigroup.codewars.data.paging.ObservableBoundaryCallback;
 import com.tuigroup.codewars.data.util.Resource;
+import com.tuigroup.codewars.data.util.UserOrderBy;
 
 import java.util.List;
 
@@ -28,11 +29,6 @@ public interface UserRepositoryContract {
             String username);
 
     Flowable<Resource<List<AuthoredChallengeEntity>>> getAuthoredChallenges(String username);
-
-    public enum UserOrderBy {
-        DATE_ADDED,
-        HIGHEST_RANK
-    }
 }
 
 

@@ -21,6 +21,7 @@ import com.tuigroup.codewars.data.remote.UserRestApi;
 import com.tuigroup.codewars.data.remote.model.AuthoredChallenge;
 import com.tuigroup.codewars.data.util.NetworkBoundSource;
 import com.tuigroup.codewars.data.util.Resource;
+import com.tuigroup.codewars.data.util.UserOrderBy;
 
 import java.util.Date;
 import java.util.List;

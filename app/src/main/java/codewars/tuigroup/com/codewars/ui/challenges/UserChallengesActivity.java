@@ -1,11 +1,9 @@
 package codewars.tuigroup.com.codewars.ui.challenges;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 
 import javax.inject.Inject;
 
@@ -21,6 +19,8 @@ public class UserChallengesActivity extends DaggerAppCompatActivity
         implements UserChallengesContract.View {
 
     public static final String EXTRA_USER_ID = "com.tuigroup.codewars.extra.EXTRA_USER_ID";
+
+    private static final String KEY_STATE_CHALLENGES_VIEW_TYPE = "com.tuigroup.codewars.KEY_STATE_CHALLENGES_VIEW_TYPE";
 
     @Inject
     UserChallengesContract.Presenter userChallengesContract;
@@ -47,28 +47,29 @@ public class UserChallengesActivity extends DaggerAppCompatActivity
         ButterKnife.bind(this);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.menu_userchallenges_completed:
-                                replaceContentFragmentBy(completedCompletedChallengesFragment);
-                                return true;
-                            case R.id.menu_userchallenges_authored:
-                                replaceContentFragmentBy(authoredChallengesFragment);
-                                return true;
-                        }
-                        return false;
+                item -> {
+                    switch (item.getItemId()) {
+                        case R.id.menu_userchallenges_completed:
+                            userChallengesContract.openCompletedChallengesView();
+                            return true;
+                        case R.id.menu_userchallenges_authored:
+                            userChallengesContract.openAuthoredChallengesView();
+                            return true;
                     }
+                    return false;
                 });
 
 
         completedCompletedChallengesFragment = new CompletedChallengesFragment();
         authoredChallengesFragment = new AuthoredChallengesFragment();
 
-        userChallengesContract.attachView(this);
-        userChallengesContract.openCompletedChallengesView();
-        bottomNavigationView.setSelectedItemId(R.id.menu_userchallenges_completed);
+        userChallengesContract.attachView(this, savedInstanceState != null ? readFromBundle(savedInstanceState) : null);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        writeToBundle(outState, userChallengesContract.getState());
     }
 
     private void replaceContentFragmentBy(Fragment fragment) {
@@ -76,6 +77,21 @@ public class UserChallengesActivity extends DaggerAppCompatActivity
                 .beginTransaction()
                 .replace(R.id.framelayout_userchallenges_content, fragment)
                 .commit();
+    }
+
+    private UserChallengesContract.State readFromBundle(Bundle savedInstanceState) {
+        ChallengesViewType viewType = ChallengesViewType
+                .from(savedInstanceState.getInt(KEY_STATE_CHALLENGES_VIEW_TYPE));
+        return new UserChallengesState(viewType);
+    }
+
+    private void writeToBundle(Bundle outState, UserChallengesContract.State state) {
+        if (state == null) {
+            return;
+        }
+        if (state.getChallengesViewType() != null) {
+            outState.putInt(KEY_STATE_CHALLENGES_VIEW_TYPE, state.getChallengesViewType().getValue());
+        }
     }
 
     @Override
@@ -105,10 +121,12 @@ public class UserChallengesActivity extends DaggerAppCompatActivity
     @Override
     public void showAuthoredChallengesView() {
         replaceContentFragmentBy(authoredChallengesFragment);
+        bottomNavigationView.getMenu().findItem(R.id.menu_userchallenges_authored).setChecked(true);
     }
 
     @Override
     public void showCompletedChallengesView() {
         replaceContentFragmentBy(completedCompletedChallengesFragment);
+        bottomNavigationView.getMenu().findItem(R.id.menu_userchallenges_completed).setChecked(true);
     }
 }

@@ -3,7 +3,10 @@ package com.tuigroup.codewars.data.local.model
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @Entity(tableName = "code_challenge")
 data class CodeChallengeEntity(
         @PrimaryKey
@@ -29,4 +32,4 @@ data class CodeChallengeEntity(
         val totalStars: Int,
         @ColumnInfo(name = "tags")
         val tags: List<String>?
-)
+) : Parcelable
