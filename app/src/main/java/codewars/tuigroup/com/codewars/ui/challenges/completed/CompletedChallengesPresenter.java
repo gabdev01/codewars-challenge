@@ -2,9 +2,9 @@ package codewars.tuigroup.com.codewars.ui.challenges.completed;
 
 import android.util.Log;
 
-import com.tuigroup.codewars.data.CompletedChallengePageBoundaryCallback;
-import com.tuigroup.codewars.data.UserRepository;
+import com.tuigroup.codewars.data.UserRepositoryContract;
 import com.tuigroup.codewars.data.local.model.CompletedChallengeEntity;
+import com.tuigroup.codewars.data.paging.ObservableBoundaryCallback;
 import com.tuigroup.codewars.data.remote.exception.NoConnectivityException;
 
 import java.util.List;
@@ -12,26 +12,23 @@ import java.util.List;
 import javax.inject.Inject;
 
 import codewars.tuigroup.com.codewars.ui.base.BasePresenter;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import codewars.tuigroup.com.codewars.ui.util.rx.SchedulerProvider;
 
 public class CompletedChallengesPresenter extends BasePresenter<CompletedChallengesContract.View>
-        implements CompletedChallengesContract.Presenter, CompletedChallengePageBoundaryCallback.PageBoundaryCallback {
+        implements CompletedChallengesContract.Presenter, ObservableBoundaryCallback.BoundaryCallbackRequestListener {
 
-    private UserRepository userRepository;
+    private UserRepositoryContract userRepository;
     private String userId;
     private List<CompletedChallengeEntity> completedChallenges;
-    private CompletedChallengePageBoundaryCallback callback;
 
     @Inject
-    public CompletedChallengesPresenter(UserRepository userRepository,
-                                        CompletedChallengePageBoundaryCallback callback,
+    public CompletedChallengesPresenter(UserRepositoryContract userRepository,
+                                        SchedulerProvider schedulerProvider,
                                         String userId) {
+        super(schedulerProvider);
         this.userRepository = userRepository;
-        this.callback = callback;
         this.userId = userId;
         this.completedChallenges = null;
-        this.callback.setPageBoundaryListener(this);
     }
 
     @Override
@@ -43,9 +40,9 @@ public class CompletedChallengesPresenter extends BasePresenter<CompletedChallen
     @Override
     public void loadChallenges() {
         view.showLoadingChallengesIndicator(true);
-        addLifecycleDisposable(userRepository.getCompletedChallenges(callback, userId)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+        addLifecycleDisposable(userRepository.getCompletedChallenges(this, userId)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
                 .subscribe(
                         challenges -> {
                             completedChallenges = challenges.snapshot();
@@ -57,7 +54,7 @@ public class CompletedChallengesPresenter extends BasePresenter<CompletedChallen
                             }
                         },
                         throwable -> {
-                            if (completedChallenges.isEmpty()) {
+                            if (completedChallenges == null || completedChallenges.isEmpty()) {
                                 logError(throwable);
                                 boolean isThrowableHandled = false;
                                 if (throwable instanceof NoConnectivityException) {

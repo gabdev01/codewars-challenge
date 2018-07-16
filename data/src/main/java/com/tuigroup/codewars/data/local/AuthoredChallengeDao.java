@@ -17,7 +17,7 @@ import io.reactivex.Flowable;
 public interface AuthoredChallengeDao {
 
     @Query("SELECT * FROM authored_challenge WHERE user_id == :username")
-    Flowable<List<AuthoredChallengeEntity>> getAuthoredChallenge(String username);
+    Flowable<List<AuthoredChallengeEntity>> getAuthoredChallenges(String username);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(AuthoredChallengeEntity... challenge);

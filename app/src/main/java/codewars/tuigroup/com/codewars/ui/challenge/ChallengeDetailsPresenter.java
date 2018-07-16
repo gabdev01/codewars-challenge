@@ -2,7 +2,7 @@ package codewars.tuigroup.com.codewars.ui.challenge;
 
 import android.arch.lifecycle.LifecycleObserver;
 
-import com.tuigroup.codewars.data.CodeChallengeRepository;
+import com.tuigroup.codewars.data.CodeChallengeRepositoryContract;
 import com.tuigroup.codewars.data.local.model.CodeChallengeEntity;
 import com.tuigroup.codewars.data.remote.exception.NoConnectivityException;
 
@@ -10,21 +10,23 @@ import javax.inject.Inject;
 
 import codewars.tuigroup.com.codewars.di.ActivityScoped;
 import codewars.tuigroup.com.codewars.ui.base.BasePresenter;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import codewars.tuigroup.com.codewars.ui.util.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 @ActivityScoped
 public class ChallengeDetailsPresenter extends BasePresenter<ChallengeDetailsContract.View>
         implements ChallengeDetailsContract.Presenter, LifecycleObserver {
 
-    private CodeChallengeRepository codeChallengeRepository;
+    private CodeChallengeRepositoryContract codeChallengeRepository;
     private String challengeId;
     private CompositeDisposable challengeCompositeDisposable;
     private CodeChallengeEntity challenge;
 
     @Inject
-    public ChallengeDetailsPresenter(CodeChallengeRepository codeChallengeRepository, String challengeId) {
+    public ChallengeDetailsPresenter(CodeChallengeRepositoryContract codeChallengeRepository,
+                                     SchedulerProvider schedulerProvider,
+                                     String challengeId) {
+        super(schedulerProvider);
         this.codeChallengeRepository = codeChallengeRepository;
         this.challengeId = challengeId;
         this.challengeCompositeDisposable = new CompositeDisposable();
@@ -49,8 +51,8 @@ public class ChallengeDetailsPresenter extends BasePresenter<ChallengeDetailsCon
         view.showLoadingChallengeIndicator(true);
         challengeCompositeDisposable.clear();
         challengeCompositeDisposable.add(codeChallengeRepository.getChallenge(challengeId)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread(), true)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui(), true)
                 .subscribe(
                         challengeResponse -> {
                             if (challengeResponse.data.isPresent()) {

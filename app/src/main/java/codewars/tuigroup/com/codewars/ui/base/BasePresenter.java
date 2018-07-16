@@ -1,9 +1,8 @@
 package codewars.tuigroup.com.codewars.ui.base;
 
 import android.support.annotation.CallSuper;
-import android.text.TextUtils;
-import android.util.Log;
 
+import codewars.tuigroup.com.codewars.ui.util.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
@@ -11,9 +10,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class BasePresenter<View extends BaseView> implements ScopedPresenter<View> {
 
+    protected SchedulerProvider schedulerProvider;
     protected View view;
     private CompositeDisposable compositeDisposable;
     private CompositeDisposable compositeLifecyleDisposable;
+
+    public BasePresenter(SchedulerProvider schedulerProvider) {
+        this.schedulerProvider = schedulerProvider;
+    }
 
     @Override
     @CallSuper
@@ -66,8 +70,6 @@ public abstract class BasePresenter<View extends BaseView> implements ScopedPres
     }
 
     protected void logError(final Throwable throwable) {
-        if (!TextUtils.isEmpty(throwable.getMessage())) {
-            Log.e(getClass().getSimpleName(), throwable.getMessage(), throwable);
-        }
+        // TODO Need to add a logger
     }
 }

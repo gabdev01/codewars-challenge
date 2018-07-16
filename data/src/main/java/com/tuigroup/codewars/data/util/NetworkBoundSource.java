@@ -18,11 +18,15 @@ public abstract class NetworkBoundSource<LocalType, RemoteType> {
                 .map(Resource::local)
                 .subscribe(
                         result -> {
-                            firstDataDisposable.dispose();
+                            if (firstDataDisposable != null) {
+                                firstDataDisposable.dispose();
+                            }
                             emitter.onNext(result);
                             requestRemote();
                         }, throwable -> {
-                            firstDataDisposable.dispose();
+                            if (firstDataDisposable != null) {
+                                firstDataDisposable.dispose();
+                            }
                             emitter.onError(throwable);
                             requestRemote();
                         });

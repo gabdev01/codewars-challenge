@@ -15,6 +15,8 @@ import com.tuigroup.codewars.data.local.model.UserSearchHistory;
 import com.tuigroup.codewars.data.local.model.UserSearchHistoryEntity;
 import com.tuigroup.codewars.data.mapper.AuthoredChallengeMapper;
 import com.tuigroup.codewars.data.mapper.UserMapper;
+import com.tuigroup.codewars.data.paging.CompletedObservableBoundaryCallback;
+import com.tuigroup.codewars.data.paging.ObservableBoundaryCallback;
 import com.tuigroup.codewars.data.remote.UserRestApi;
 import com.tuigroup.codewars.data.remote.model.AuthoredChallenge;
 import com.tuigroup.codewars.data.util.NetworkBoundSource;
@@ -33,7 +35,7 @@ import io.reactivex.Single;
 import io.reactivex.functions.Function;
 
 @Singleton
-public class UserRepository {
+public class UserRepository implements UserRepositoryContract {
 
     private static final int COMPLETED_CHALLENGES_PAGE_SIZE = 50;
 
@@ -43,22 +45,30 @@ public class UserRepository {
     private AuthoredChallengeDao authoredChallengeDao;
     private UserSearchHistoryDao searchUserHistoryDao;
 
+    private UserMapper userMapper;
+    private AuthoredChallengeMapper authoredChallengeMapper;
+
     @Inject
     UserRepository(UserRestApi userRestApi,
                    UserDao userDao,
                    CompletedChallengeDao completedChallengeDao,
                    AuthoredChallengeDao authoredChallengeDao,
-                   UserSearchHistoryDao searchUserHistoryDao) {
+                   UserSearchHistoryDao searchUserHistoryDao,
+                   UserMapper userMapper,
+                   AuthoredChallengeMapper authoredChallengeMapper) {
         this.userRestApi = userRestApi;
         this.userDao = userDao;
         this.completedChallengeDao = completedChallengeDao;
         this.authoredChallengeDao = authoredChallengeDao;
         this.searchUserHistoryDao = searchUserHistoryDao;
+        this.userMapper = userMapper;
+        this.authoredChallengeMapper = authoredChallengeMapper;
     }
 
+    @Override
     public Single<UserEntity> getUser(String username) {
         return userRestApi.getUser(username)
-                .map(UserMapper::mapFromApiToEntity)
+                .map(userMapper::mapFromApiToEntity)
                 .doOnSuccess(user -> {
                     userDao.insert(user);
                     UserSearchHistoryEntity history = new UserSearchHistoryEntity(
@@ -69,10 +79,12 @@ public class UserRepository {
                 });
     }
 
+    @Override
     public Flowable<List<UserSearchHistory>> getLastUsersSearched(int limit) {
         return searchUserHistoryDao.getLastUsersSearched(limit);
     }
 
+    @Override
     public Flowable<List<UserSearchHistory>> getLastUsersSearched(UserOrderBy orderBy, int limit) {
         if (orderBy == UserOrderBy.HIGHEST_RANK) {
             return searchUserHistoryDao.getLastUsersSearchedByRank(limit);
@@ -81,9 +93,15 @@ public class UserRepository {
         }
     }
 
-    public Observable<PagedList<CompletedChallengeEntity>> getCompletedChallenges(CompletedChallengePageBoundaryCallback callback, String username) {
-        callback.setUsername(username);
-        DataSource.Factory localData = completedChallengeDao.getCompletedChallengesByUser2(callback.getUsername());
+    @Override
+    public Observable<PagedList<CompletedChallengeEntity>> getCompletedChallenges(
+            ObservableBoundaryCallback.BoundaryCallbackRequestListener listener,
+            String username) {
+        CompletedObservableBoundaryCallback boundaryCallback =
+                new CompletedObservableBoundaryCallback(userRestApi, completedChallengeDao);
+        boundaryCallback.setUsername(username);
+        boundaryCallback.setBoundaryCallbackRequestListener(listener);
+        DataSource.Factory localData = completedChallengeDao.getCompletedChallengesDataSourceByUser(username);
         PagedList.Config pagedList = new PagedList.Config.Builder()
                 .setPageSize(COMPLETED_CHALLENGES_PAGE_SIZE)
                 .setEnablePlaceholders(false)
@@ -91,11 +109,12 @@ public class UserRepository {
                 .setPrefetchDistance(COMPLETED_CHALLENGES_PAGE_SIZE)
                 .build();
         Observable<PagedList<CompletedChallengeEntity>> result = new RxPagedListBuilder<>(localData, pagedList)
-                .setBoundaryCallback(callback)
+                .setBoundaryCallback(boundaryCallback)
                 .buildObservable();
         return result;
     }
 
+    @Override
     public Flowable<Resource<List<AuthoredChallengeEntity>>> getAuthoredChallenges(String username) {
         return Flowable.create(emitter -> new NetworkBoundSource<List<AuthoredChallengeEntity>, List<AuthoredChallenge>>(emitter) {
             @Override
@@ -106,7 +125,7 @@ public class UserRepository {
 
             @Override
             public Flowable<List<AuthoredChallengeEntity>> getLocal() {
-                return authoredChallengeDao.getAuthoredChallenge(username);
+                return authoredChallengeDao.getAuthoredChallenges(username);
             }
 
             @Override
@@ -116,13 +135,8 @@ public class UserRepository {
 
             @Override
             public Function<List<AuthoredChallenge>, List<AuthoredChallengeEntity>> mapper() {
-                return challenge -> AuthoredChallengeMapper.mapFromApiToEntity(challenge, username);
+                return challenge -> authoredChallengeMapper.mapFromApiToEntity(challenge, username);
             }
         }, BackpressureStrategy.LATEST);
-    }
-
-    public enum UserOrderBy {
-        DATE_ADDED,
-        HIGHEST_RANK
     }
 }

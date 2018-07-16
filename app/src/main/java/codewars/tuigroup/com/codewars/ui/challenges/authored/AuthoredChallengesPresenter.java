@@ -1,6 +1,6 @@
 package codewars.tuigroup.com.codewars.ui.challenges.authored;
 
-import com.tuigroup.codewars.data.UserRepository;
+import com.tuigroup.codewars.data.UserRepositoryContract;
 import com.tuigroup.codewars.data.local.model.AuthoredChallengeEntity;
 import com.tuigroup.codewars.data.remote.exception.NoConnectivityException;
 import com.tuigroup.codewars.data.util.Status;
@@ -11,20 +11,20 @@ import java.util.List;
 import javax.inject.Inject;
 
 import codewars.tuigroup.com.codewars.ui.base.BasePresenter;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import codewars.tuigroup.com.codewars.ui.util.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class AuthoredChallengesPresenter extends BasePresenter<AuthoredChallengesContract.View>
         implements AuthoredChallengesContract.Presenter {
 
-    private UserRepository userRepository;
+    private UserRepositoryContract userRepository;
     private String userId;
     private List<AuthoredChallengeEntity> authoredChallenges;
     private CompositeDisposable challengesCompositeDisposable;
 
     @Inject
-    public AuthoredChallengesPresenter(UserRepository userRepository, String userId) {
+    public AuthoredChallengesPresenter(UserRepositoryContract userRepository, SchedulerProvider schedulerProvider, String userId) {
+        super(schedulerProvider);
         this.userRepository = userRepository;
         this.userId = userId;
         this.authoredChallenges = null;
@@ -48,8 +48,8 @@ public class AuthoredChallengesPresenter extends BasePresenter<AuthoredChallenge
         view.showLoadingChallengesIndicator(true);
         challengesCompositeDisposable.clear();
         challengesCompositeDisposable.add(userRepository.getAuthoredChallenges(userId)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread(), true)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui(), true)
                 .subscribe(
                         authoredChallenges -> {
                             if (authoredChallenges.status == Status.LOCAL

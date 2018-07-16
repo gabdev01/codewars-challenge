@@ -7,7 +7,7 @@ import codewars.tuigroup.com.codewars.ui.base.ScopedPresenter;
 
 public class ChallengeDetailsContract {
 
-    interface View extends BaseView<ChallengeDetailsContract.Presenter> {
+    public interface View extends BaseView<ChallengeDetailsContract.Presenter> {
 
         void showLoadingChallengeIndicator(boolean enabled);
 
@@ -18,7 +18,7 @@ public class ChallengeDetailsContract {
         void showLoadingChallengeNoInternetError();
     }
 
-    interface Presenter extends ScopedPresenter<ChallengeDetailsContract.View> {
+    public interface Presenter extends ScopedPresenter<ChallengeDetailsContract.View> {
 
         void loadChallenge();
     }

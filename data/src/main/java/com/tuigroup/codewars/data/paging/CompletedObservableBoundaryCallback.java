@@ -1,6 +1,5 @@
-package com.tuigroup.codewars.data;
+package com.tuigroup.codewars.data.paging;
 
-import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
 
 import com.tuigroup.codewars.data.local.CompletedChallengeDao;
@@ -15,7 +14,7 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class CompletedChallengePageBoundaryCallback extends PagedList.BoundaryCallback<CompletedChallengeEntity> {
+public class CompletedObservableBoundaryCallback extends ObservableBoundaryCallback<CompletedChallengeEntity> {
 
     private UserRestApi userRestApi;
     private CompletedChallengeDao completedChallengeDao;
@@ -24,11 +23,11 @@ public class CompletedChallengePageBoundaryCallback extends PagedList.BoundaryCa
     private boolean isRequestRunning;
     private boolean isAllDataLoaded;
 
-    private PageBoundaryCallback pageBoundaryListener;
+    private BoundaryCallbackRequestListener boundaryCallbackRequestListener;
 
     @Inject
-    public CompletedChallengePageBoundaryCallback(UserRestApi userRestApi,
-                                                  CompletedChallengeDao completedChallengeDao) {
+    public CompletedObservableBoundaryCallback(UserRestApi userRestApi,
+                                               CompletedChallengeDao completedChallengeDao) {
         this.userRestApi = userRestApi;
         this.completedChallengeDao = completedChallengeDao;
         this.username = username;
@@ -44,19 +43,20 @@ public class CompletedChallengePageBoundaryCallback extends PagedList.BoundaryCa
         this.username = username;
     }
 
-    public void setPageBoundaryListener(PageBoundaryCallback listener) {
-        pageBoundaryListener = listener;
+    @Override
+    public void setBoundaryCallbackRequestListener(BoundaryCallbackRequestListener listener) {
+        boundaryCallbackRequestListener = listener;
     }
 
     private void performAllDataLoaded() {
-        if (pageBoundaryListener != null) {
-            pageBoundaryListener.onAllDataLoaded();
+        if (boundaryCallbackRequestListener != null) {
+            boundaryCallbackRequestListener.onAllDataLoaded();
         }
     }
 
     private void performRequestInProgress(boolean inProgress) {
-        if (pageBoundaryListener != null) {
-            pageBoundaryListener.onRequestInProgress(inProgress);
+        if (boundaryCallbackRequestListener != null) {
+            boundaryCallbackRequestListener.onRequestInProgress(inProgress);
         }
     }
 
@@ -102,13 +102,5 @@ public class CompletedChallengePageBoundaryCallback extends PagedList.BoundaryCa
                             return challengesResponse;
                         }
                 );
-    }
-
-    public interface PageBoundaryCallback {
-
-        void onRequestInProgress(boolean inProgress);
-
-        void onAllDataLoaded();
-
     }
 }

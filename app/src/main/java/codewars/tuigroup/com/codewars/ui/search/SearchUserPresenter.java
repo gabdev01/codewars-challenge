@@ -1,6 +1,6 @@
 package codewars.tuigroup.com.codewars.ui.search;
 
-import com.tuigroup.codewars.data.UserRepository;
+import com.tuigroup.codewars.data.UserRepositoryContract;
 import com.tuigroup.codewars.data.local.model.UserEntity;
 import com.tuigroup.codewars.data.remote.exception.NoConnectivityException;
 
@@ -8,9 +8,8 @@ import javax.inject.Inject;
 
 import codewars.tuigroup.com.codewars.di.ActivityScoped;
 import codewars.tuigroup.com.codewars.ui.base.BasePresenter;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import codewars.tuigroup.com.codewars.ui.util.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
 @ActivityScoped
@@ -19,12 +18,13 @@ public class SearchUserPresenter extends BasePresenter<SearchUserContract.View>
 
     private final static int SEARCH_USER_HISTORY_LIMIT = 5;
 
-    private UserRepository userRepository;
+    private UserRepositoryContract userRepository;
     private CompositeDisposable searchCompositeDisposable;
     private UserEntity userFound;
 
     @Inject
-    public SearchUserPresenter(UserRepository userRepository) {
+    public SearchUserPresenter(UserRepositoryContract userRepository, SchedulerProvider schedulerProvider) {
+        super(schedulerProvider);
         this.userRepository = userRepository;
         this.searchCompositeDisposable = new CompositeDisposable();
         this.userFound = null;
@@ -33,14 +33,14 @@ public class SearchUserPresenter extends BasePresenter<SearchUserContract.View>
     @Override
     public void subscribe() {
         super.subscribe();
-        loadSearchHistory(UserRepository.UserOrderBy.DATE_ADDED);
+        loadSearchHistory(UserRepositoryContract.UserOrderBy.DATE_ADDED);
     }
 
     @Override
-    public void loadSearchHistory(UserRepository.UserOrderBy orderBy) {
+    public void loadSearchHistory(UserRepositoryContract.UserOrderBy orderBy) {
         addDisposable(userRepository.getLastUsersSearched(orderBy, SEARCH_USER_HISTORY_LIMIT)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
                 .subscribe(
                         users -> {
                             if (users.isEmpty()) {
@@ -61,8 +61,8 @@ public class SearchUserPresenter extends BasePresenter<SearchUserContract.View>
         view.showSearchUserIndicator(true);
         searchCompositeDisposable.clear();
         searchCompositeDisposable.add(userRepository.getUser(username)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
                 .subscribe(
                         user -> {
                             userFound = user;

@@ -2,6 +2,7 @@ package codewars.tuigroup.com.codewars.di;
 
 import android.app.Application;
 
+import com.tuigroup.codewars.data.RepositoriesModule;
 import com.tuigroup.codewars.data.local.CodewarsDatabaseModule;
 import com.tuigroup.codewars.data.remote.CodewarsRestModule;
 
@@ -17,6 +18,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
 @Component(modules = {CodewarsDatabaseModule.class,
         CodewarsRestModule.class,
         ApplicationModule.class,
+        RepositoriesModule.class,
         ActivityBindingModule.class,
         AndroidSupportInjectionModule.class})
 public interface AppComponent extends AndroidInjector<CodewarsApplication> {

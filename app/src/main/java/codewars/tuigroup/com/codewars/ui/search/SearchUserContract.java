@@ -1,6 +1,6 @@
 package codewars.tuigroup.com.codewars.ui.search;
 
-import com.tuigroup.codewars.data.UserRepository;
+import com.tuigroup.codewars.data.UserRepositoryContract;
 import com.tuigroup.codewars.data.local.model.UserEntity;
 import com.tuigroup.codewars.data.local.model.UserSearchHistory;
 
@@ -36,7 +36,7 @@ public class SearchUserContract {
 
         void searchUser(String username);
 
-        void loadSearchHistory(UserRepository.UserOrderBy orderBy);
+        void loadSearchHistory(UserRepositoryContract.UserOrderBy orderBy);
 
         void openUserFoundChallenges();
 

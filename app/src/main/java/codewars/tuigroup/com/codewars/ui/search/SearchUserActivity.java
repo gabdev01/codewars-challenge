@@ -23,7 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.tuigroup.codewars.data.UserRepository;
+import com.tuigroup.codewars.data.UserRepositoryContract;
 import com.tuigroup.codewars.data.local.model.UserEntity;
 import com.tuigroup.codewars.data.local.model.UserSearchHistory;
 
@@ -197,9 +197,9 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
         sortDialog.setTitle(getResources().getString(R.string.search_user_sort_title));
         sortDialog.setItems(sortMenus, (dialog, index) -> {
             if (index == 1) {
-                searchUserPresenter.loadSearchHistory(UserRepository.UserOrderBy.HIGHEST_RANK);
+                searchUserPresenter.loadSearchHistory(UserRepositoryContract.UserOrderBy.HIGHEST_RANK);
             } else {
-                searchUserPresenter.loadSearchHistory(UserRepository.UserOrderBy.DATE_ADDED);
+                searchUserPresenter.loadSearchHistory(UserRepositoryContract.UserOrderBy.DATE_ADDED);
             }
             dialog.dismiss();
         });

@@ -18,16 +18,20 @@ import io.reactivex.Single;
 import io.reactivex.functions.Function;
 
 @Singleton
-public class CodeChallengeRepository {
+public class CodeChallengeRepository implements CodeChallengeRepositoryContract {
 
     private CodeChallengeRestApi codeChallengeRestApi;
     private CodeChallengeDao codeChallengeDao;
 
+    private CodeChallengeMapper codeChallengeMapper;
+
     @Inject
     CodeChallengeRepository(CodeChallengeRestApi codeChallengeRestApi,
-                            CodeChallengeDao codeChallengeDao) {
+                            CodeChallengeDao codeChallengeDao,
+                            CodeChallengeMapper codeChallengeMapper) {
         this.codeChallengeRestApi = codeChallengeRestApi;
         this.codeChallengeDao = codeChallengeDao;
+        this.codeChallengeMapper = codeChallengeMapper;
     }
 
     public Flowable<Resource<Optional<CodeChallengeEntity>>> getChallenge(String challengeId) {
@@ -54,7 +58,7 @@ public class CodeChallengeRepository {
 
             @Override
             public Function<CodeChallenge, Optional<CodeChallengeEntity>> mapper() {
-                return challenge -> Optional.of(CodeChallengeMapper.mapFromApiToEntity(challenge));
+                return challenge -> Optional.of(codeChallengeMapper.mapFromApiToEntity(challenge));
             }
         }, BackpressureStrategy.LATEST);
     }

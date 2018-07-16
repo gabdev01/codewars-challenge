@@ -21,14 +21,13 @@ public interface CompletedChallengeDao {
     Flowable<List<CompletedChallengeEntity>> getCompletedChallengesByUser(String username);
 
     @Query("SELECT * FROM completed_challenge WHERE user_id == :username")
-     DataSource.Factory<Integer, CompletedChallengeEntity> getCompletedChallengesByUser2(String username);
+    DataSource.Factory<Integer, CompletedChallengeEntity> getCompletedChallengesDataSourceByUser(String username);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(CompletedChallengeEntity... challenge);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<CompletedChallengeEntity> challenges);
-
 
     @Update
     void update(CompletedChallengeEntity... challenge);

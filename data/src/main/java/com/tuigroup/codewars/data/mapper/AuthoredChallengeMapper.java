@@ -6,9 +6,18 @@ import com.tuigroup.codewars.data.remote.model.AuthoredChallenge;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class AuthoredChallengeMapper {
 
-    public static List<AuthoredChallengeEntity> mapFromApiToEntity(List<AuthoredChallenge> authoredChallenges, String username) {
+    @Inject
+    public AuthoredChallengeMapper() {
+
+    }
+
+    public List<AuthoredChallengeEntity> mapFromApiToEntity(List<AuthoredChallenge> authoredChallenges, String username) {
         List<AuthoredChallengeEntity> authoredChallengeEntities = new ArrayList<>();
         for (AuthoredChallenge authoredChallenge : authoredChallenges) {
             authoredChallengeEntities.add(mapFromApiToEntity(authoredChallenge, username));
@@ -16,7 +25,7 @@ public class AuthoredChallengeMapper {
         return authoredChallengeEntities;
     }
 
-    public static AuthoredChallengeEntity mapFromApiToEntity(AuthoredChallenge authoredChallenge, String username) {
+    public AuthoredChallengeEntity mapFromApiToEntity(AuthoredChallenge authoredChallenge, String username) {
         AuthoredChallengeEntity authoredChallengeEntity = new AuthoredChallengeEntity(
                 authoredChallenge.getId(),
                 username,

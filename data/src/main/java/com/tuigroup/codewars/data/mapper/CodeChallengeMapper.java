@@ -3,9 +3,18 @@ package com.tuigroup.codewars.data.mapper;
 import com.tuigroup.codewars.data.local.model.CodeChallengeEntity;
 import com.tuigroup.codewars.data.remote.model.CodeChallenge;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class CodeChallengeMapper {
 
-    public static CodeChallengeEntity mapFromApiToEntity(CodeChallenge codeChallenge) {
+    @Inject
+    public CodeChallengeMapper() {
+
+    }
+
+    public CodeChallengeEntity mapFromApiToEntity(CodeChallenge codeChallenge) {
         CodeChallengeEntity codeChallengeEntity = new CodeChallengeEntity(
                 codeChallenge.getId(),
                 codeChallenge.getName(),
