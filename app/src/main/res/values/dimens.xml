@@ -20,8 +20,14 @@
     <dimen name="searchviewitem_horizontal_space">8dp</dimen>
     <dimen name="searchviewitem_items_vertical_space">16dp</dimen>
 
-    <!-- Authored challenge view -->
+    <!-- User challenges view -->
     <dimen name="authoredchallengeitem_padding">16dp</dimen>
+    <dimen name="completedchallengeitem_padding">16dp</dimen>
+    <dimen name="completedchallenge_loading_vertical_padding">8dp</dimen>
+    <dimen name="completedchallenge_loading_horizontal_padding">16dp</dimen>
+
+    <!-- User challenges view -->
+    <dimen name="challengedetails_title_card_vertical_space">8dp</dimen>
 
     <!-- Content loading widget -->
     <dimen name="widget_content_loading_icon">48dp</dimen>

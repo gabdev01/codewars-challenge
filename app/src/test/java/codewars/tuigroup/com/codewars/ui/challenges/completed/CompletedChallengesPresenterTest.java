@@ -59,8 +59,6 @@ public class CompletedChallengesPresenterTest {
 
         testScheduler.triggerActions();
 
-        verify(completedChallengesView).showLoadingChallengesIndicator(true);
-        verify(completedChallengesView).showLoadingChallengesIndicator(false);
         verify(completedChallengesView).showLoadingChallengesError();
     }
 

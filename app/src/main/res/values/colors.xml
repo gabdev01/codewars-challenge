@@ -23,4 +23,7 @@
     <color name="user_challenges_menu_text_selected">#FFFFFF</color>
     <color name="user_challenges_menu_icon_tint_normal">#BBFFFFFF</color>
     <color name="user_challenges_menu_text_tint_selected">#FFFFFF</color>
+
+    <!-- Challenge details view -->
+    <color name="challenge_details_description_background">#FFFFFF</color>
 </resources>

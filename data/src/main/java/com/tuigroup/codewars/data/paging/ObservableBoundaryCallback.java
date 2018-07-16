@@ -10,6 +10,8 @@ public abstract class ObservableBoundaryCallback<T> extends PagedList.BoundaryCa
 
         void onRequestInProgress(boolean inProgress);
 
+        void onRequestError(Throwable throwable);
+
         void onAllDataLoaded();
     }
 }

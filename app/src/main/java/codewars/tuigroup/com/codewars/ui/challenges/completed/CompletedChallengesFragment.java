@@ -63,6 +63,7 @@ public class CompletedChallengesFragment extends DaggerFragment implements
         completedChallengesAdapter = new CompletedChallengesAdapter(getDiffCallback());
         challengesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         challengesRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        challengesRecyclerView.setNestedScrollingEnabled(true);
         DividerItemDecoration decoration = new DividerItemDecoration(
                 getContext(), DividerItemDecoration.VERTICAL);
         decoration.setDrawable(new ColorDrawable(getResources().getColor(R.color.search_user_item_divider)));
@@ -70,6 +71,7 @@ public class CompletedChallengesFragment extends DaggerFragment implements
         completedChallengesAdapter.setOnChallengeClickListener(this);
         challengesRecyclerView.setAdapter(completedChallengesAdapter);
 
+        contentLoadingView.setTextColor(getResources().getColor(R.color.secondary_text_light_normal));
         contentLoadingView.setOnRetryRequestedListener(this);
 
         return rootView;
@@ -118,11 +120,11 @@ public class CompletedChallengesFragment extends DaggerFragment implements
     @Override
     public void showLoadingChallengesIndicator(boolean enabled) {
         if (enabled && !contentLoadingView.isProgressBarShown()) {
-            challengesRecyclerView.setVisibility(View.INVISIBLE);
+            contentLoadingView.setVisibility(View.VISIBLE);
             contentLoadingView.hideMessage();
             contentLoadingView.showProgressBar();
         } else if (!enabled && contentLoadingView.isProgressBarShown()) {
-            challengesRecyclerView.setVisibility(View.INVISIBLE);
+            contentLoadingView.setVisibility(View.INVISIBLE);
             contentLoadingView.hideMessage();
             contentLoadingView.hideProgressBar();
         }
@@ -130,7 +132,6 @@ public class CompletedChallengesFragment extends DaggerFragment implements
 
     @Override
     public void showLoadingChallengesError() {
-        challengesRecyclerView.setVisibility(View.INVISIBLE);
         contentLoadingView.setVisibility(View.VISIBLE);
         contentLoadingView.showMessage(
                 R.drawable.ic_error_24,
@@ -140,7 +141,6 @@ public class CompletedChallengesFragment extends DaggerFragment implements
 
     @Override
     public void showLoadingChallengesNoInternetError() {
-        challengesRecyclerView.setVisibility(View.INVISIBLE);
         contentLoadingView.setVisibility(View.VISIBLE);
         contentLoadingView.showMessage(
                 R.drawable.ic_cloud_off_24,
@@ -151,15 +151,13 @@ public class CompletedChallengesFragment extends DaggerFragment implements
     @Override
     public void showChallenges(PagedList<CompletedChallengeEntity> challenges) {
         challengesRecyclerView.setVisibility(View.VISIBLE);
-        contentLoadingView.setVisibility(View.INVISIBLE);
-        contentLoadingView.hideMessage();
 
         completedChallengesAdapter.submitList(challenges);
     }
 
     @Override
     public void showNoChallenges() {
-        challengesRecyclerView.setVisibility(View.INVISIBLE);
+        challengesRecyclerView.setVisibility(View.GONE);
         contentLoadingView.setVisibility(View.VISIBLE);
         contentLoadingView.showMessage(
                 R.drawable.ic_no_content_24,
@@ -172,6 +170,13 @@ public class CompletedChallengesFragment extends DaggerFragment implements
         Intent intent = new Intent(getContext(), ChallengeDetailsActivity.class);
         intent.putExtra(EXTRA_CHALLENGE_ID, challengeId);
         startActivity(intent);
+    }
+
+    @Override
+    public void showAllDataLoaded() {
+        // TODO This view should be scrollable with the recyclerview for a better effect
+        contentLoadingView.setVisibility(View.VISIBLE);
+        contentLoadingView.showMessage(R.string.completed_challenges_all_data_loaded);
     }
 
     @Override

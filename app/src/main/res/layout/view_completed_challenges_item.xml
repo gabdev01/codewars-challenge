@@ -6,8 +6,7 @@
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/searchviewitem_items_vertical_space"
-    android:paddingTop="@dimen/searchviewitem_items_vertical_space"
+    android:padding="@dimen/completedchallengeitem_padding"
     tools:context=".ui.challenges.UserChallengesActivity">
 
     <TextView

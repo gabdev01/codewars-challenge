@@ -80,7 +80,8 @@ public class UsersSearchHistoryAdapter extends BaseQueuedAdapter<UserSearchHisto
                     R.string.search_user_item_leaderboard_position), user.getLeaderboardPosition()));
             usernameTextView.setText(user.getUsername());
             clanTextView.setText(user.getClan());
-            honorTextView.setText(String.valueOf(user.getHonor()));
+            honorTextView.setText(String.format(context.getString(
+                    R.string.search_user_item_honor), user.getHonor()));
         }
 
         @Override

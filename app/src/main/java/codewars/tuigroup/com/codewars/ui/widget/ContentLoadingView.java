@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import codewars.tuigroup.com.codewars.R;
@@ -16,7 +17,7 @@ import codewars.tuigroup.com.codewars.R;
 public class ContentLoadingView extends FrameLayout implements View.OnClickListener {
 
     private LinearLayout messageLayout;
-    private ContentLoadingProgressBar loadingProgressBar;
+    private ProgressBar loadingProgressBar;
     private ImageView iconImageView;
     private TextView descriptionTextView;
     private Button retryButton;
@@ -56,19 +57,23 @@ public class ContentLoadingView extends FrameLayout implements View.OnClickListe
     }
 
     public void showProgressBar() {
-        loadingProgressBar.show();
+        loadingProgressBar.setVisibility(View.VISIBLE);
     }
 
     public void hideProgressBar() {
-        loadingProgressBar.hide();
+        loadingProgressBar.setVisibility(View.GONE);
     }
 
     public boolean isProgressBarShown() {
-        return loadingProgressBar.isViewShown();
+        return loadingProgressBar.getVisibility() == View.VISIBLE;
+    }
+
+    public void showMessage(int messageResId) {
+        showMessage(-1, messageResId, false);
     }
 
     public void showMessage(int iconResId, int messageResId, boolean isRetryButtonShown) {
-        retryButton.setVisibility(isRetryButtonShown ? View.VISIBLE : View.INVISIBLE);
+        retryButton.setVisibility(isRetryButtonShown ? View.VISIBLE : View.GONE);
         messageLayout.setVisibility(View.VISIBLE);
         if (iconResId != -1) {
             iconImageView.setVisibility(View.VISIBLE);

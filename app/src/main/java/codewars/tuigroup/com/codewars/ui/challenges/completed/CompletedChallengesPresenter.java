@@ -1,7 +1,5 @@
 package codewars.tuigroup.com.codewars.ui.challenges.completed;
 
-import android.util.Log;
-
 import com.tuigroup.codewars.data.UserRepositoryContract;
 import com.tuigroup.codewars.data.local.model.CompletedChallengeEntity;
 import com.tuigroup.codewars.data.paging.ObservableBoundaryCallback;
@@ -13,6 +11,7 @@ import javax.inject.Inject;
 
 import codewars.tuigroup.com.codewars.ui.base.BasePresenter;
 import codewars.tuigroup.com.codewars.ui.util.rx.SchedulerProvider;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class CompletedChallengesPresenter extends BasePresenter<CompletedChallengesContract.View>
         implements CompletedChallengesContract.Presenter, ObservableBoundaryCallback.BoundaryCallbackRequestListener {
@@ -20,6 +19,8 @@ public class CompletedChallengesPresenter extends BasePresenter<CompletedChallen
     private UserRepositoryContract userRepository;
     private String userId;
     private List<CompletedChallengeEntity> completedChallenges;
+    private CompositeDisposable challengesCompositeDisposable;
+    private boolean isRequestInRunning;
 
     @Inject
     public CompletedChallengesPresenter(UserRepositoryContract userRepository,
@@ -29,6 +30,8 @@ public class CompletedChallengesPresenter extends BasePresenter<CompletedChallen
         this.userRepository = userRepository;
         this.userId = userId;
         this.completedChallenges = null;
+        this.challengesCompositeDisposable = new CompositeDisposable();
+        this.isRequestInRunning = false;
     }
 
     @Override
@@ -38,48 +41,63 @@ public class CompletedChallengesPresenter extends BasePresenter<CompletedChallen
     }
 
     @Override
+    public void detachView() {
+        super.detachView();
+        challengesCompositeDisposable.clear();
+    }
+
+    @Override
     public void loadChallenges() {
-        view.showLoadingChallengesIndicator(true);
-        addLifecycleDisposable(userRepository.getCompletedChallenges(this, userId)
+        challengesCompositeDisposable.clear();
+        challengesCompositeDisposable.add(userRepository.getCompletedChallenges(this, userId)
                 .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
+                .observeOn(schedulerProvider.ui(), true)
                 .subscribe(
                         challenges -> {
                             completedChallenges = challenges.snapshot();
-                            view.showLoadingChallengesIndicator(false);
                             if (challenges.isEmpty()) {
-                                view.showNoChallenges();
+                                if(!isRequestInRunning) {
+                                    view.showNoChallenges();
+                                }
                             } else {
                                 view.showChallenges(challenges);
                             }
                         },
                         throwable -> {
-                            if (completedChallenges == null || completedChallenges.isEmpty()) {
-                                logError(throwable);
-                                boolean isThrowableHandled = false;
-                                if (throwable instanceof NoConnectivityException) {
-                                    view.showLoadingChallengesIndicator(false);
-                                    view.showLoadingChallengesNoInternetError();
-                                    isThrowableHandled = true;
-                                }
-                                if (!isThrowableHandled) {
-                                    logError(throwable);
-                                    view.showLoadingChallengesIndicator(false);
-                                    view.showLoadingChallengesError();
-                                }
-                            }
+                            processError(throwable);
                         }
                 ));
     }
 
+    private void processError(Throwable throwable) {
+        if (completedChallenges == null || completedChallenges.isEmpty()) {
+            logError(throwable);
+            boolean isThrowableHandled = false;
+            if (throwable instanceof NoConnectivityException) {
+                view.showLoadingChallengesNoInternetError();
+                isThrowableHandled = true;
+            }
+            if (!isThrowableHandled) {
+                logError(throwable);
+                view.showLoadingChallengesError();
+            }
+        }
+    }
+
     @Override
     public void onRequestInProgress(boolean inProgress) {
-        Log.e("", "onRequestInProgress");
+        isRequestInRunning = inProgress;
+        view.showLoadingChallengesIndicator(inProgress);
+    }
+
+    @Override
+    public void onRequestError(Throwable throwable) {
+        processError(throwable);
     }
 
     @Override
     public void onAllDataLoaded() {
-        Log.e("", "onAllDataLoaded");
+        view.showAllDataLoaded();
     }
 
     @Override

@@ -35,6 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import codewars.tuigroup.com.codewars.R;
 import codewars.tuigroup.com.codewars.ui.challenges.UserChallengesActivity;
+import codewars.tuigroup.com.codewars.ui.util.ViewUtils;
 import dagger.android.support.DaggerAppCompatActivity;
 
 
@@ -100,8 +101,8 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
         });
         searchEditText.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                ViewUtils.hideKeyboard(searchEditText);
                 performSearch();
-                return false;
             }
             return false;
         });
@@ -262,7 +263,8 @@ public class SearchUserActivity extends DaggerAppCompatActivity implements View.
                 getString(R.string.search_user_item_leaderboard_position), user.getLeaderboardPosition()));
         usernameTextView.setText(user.getUsername());
         clanTextView.setText(user.getClan());
-        honorTextView.setText(String.valueOf(user.getHonor()));
+        honorTextView.setText(String.format(
+                getString(R.string.search_user_item_honor), user.getHonor()));
     }
 
     @Override

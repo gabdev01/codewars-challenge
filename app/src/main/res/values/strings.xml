@@ -12,9 +12,10 @@
     <string name="search_user_toolbar_search_hint">Search user here</string>
     <string name="search_user_search_clear_search">Clear search</string>
     <string name="search_user_item_leaderboard_position">#<xliff:g example="12" id="position">%1$d</xliff:g></string>
+    <string name="search_user_item_honor"><xliff:g example="12" id="honor">%1$d</xliff:g> honor</string>
     <string name="search_user_search_history_empty">Your search history is empty.</string>
     <string name="search_user_search_history_error">Oops, sorry we are not able to show your search history.</string>
-    <string name="search_user_search_result_not_found">Oops, sorry this user doesn\'t exist. Please, try again with another spelling.</string>
+    <string name="search_user_search_result_not_found">Oops, sorry this user doesn\'t exist. Please, try again with another name.</string>
     <string name="search_user_sort_title">Sort by</string>
     <string name="search_user_sort_by_date">Last searched</string>
     <string name="search_user_sort_by_rank">Higher rank</string>
@@ -24,6 +25,11 @@
     <string name="user_challenges_menu_authored">Authored challenges</string>
     <string name="authored_challenges_empty_label">No authored challenges here.</string>
     <string name="completed_challenges_empty_label">No completed challenges here.</string>
+    <string name="completed_challenges_all_data_loaded">All elements are loaded.</string>
+
+    <!-- Challenge details view -->
+    <string name="challenge_details_activity_title">Challenge</string>
+    <string name="challenge_details_open_url">Show more</string>
 
     <!-- Content loading widget -->
     <string name="widget_content_loading_retry">Retry</string>

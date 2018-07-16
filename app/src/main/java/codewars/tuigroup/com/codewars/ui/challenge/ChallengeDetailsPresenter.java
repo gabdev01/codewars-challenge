@@ -79,4 +79,9 @@ public class ChallengeDetailsPresenter extends BasePresenter<ChallengeDetailsCon
                         }
                 ));
     }
+
+    @Override
+    public void openChallengeUrl() {
+        view.showChallengeUrl(challenge.getUrl());
+    }
 }

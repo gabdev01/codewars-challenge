@@ -60,6 +60,12 @@ public class CompletedObservableBoundaryCallback extends ObservableBoundaryCallb
         }
     }
 
+    private void performRequestError(Throwable throwable) {
+        if (boundaryCallbackRequestListener != null) {
+            boundaryCallbackRequestListener.onRequestError(throwable);
+        }
+    }
+
     @Override
     public void onZeroItemsLoaded() {
         getAndSaveData(0);
@@ -80,14 +86,18 @@ public class CompletedObservableBoundaryCallback extends ObservableBoundaryCallb
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(challengesResponse -> {
-                    isAllDataLoaded = (pageIndex + 1) == challengesResponse.getTotalPages();
+                    isRequestRunning = false;
+                    performRequestInProgress(isRequestRunning);
+
+                    isAllDataLoaded = (pageIndex + 1) >= challengesResponse.getTotalPages();
                     if (isAllDataLoaded) {
                         performAllDataLoaded();
                     }
                 })
-                .doFinally(() -> {
+                .doOnError(throwable -> {
                     isRequestRunning = false;
                     performRequestInProgress(isRequestRunning);
+                    performRequestError(throwable);
                 })
                 .subscribe();
     }

@@ -16,10 +16,14 @@ public class ChallengeDetailsContract {
         void showLoadingChallengeError();
 
         void showLoadingChallengeNoInternetError();
+
+        void showChallengeUrl(String url);
     }
 
     public interface Presenter extends ScopedPresenter<ChallengeDetailsContract.View> {
 
         void loadChallenge();
+
+        void openChallengeUrl();
     }
 }

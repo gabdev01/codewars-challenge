@@ -22,6 +22,8 @@ public class CompletedChallengesContract {
         void showNoChallenges();
 
         void showChallengeView(String challengeId);
+
+        void showAllDataLoaded();
     }
 
     public interface Presenter extends ScopedPresenter<CompletedChallengesContract.View> {

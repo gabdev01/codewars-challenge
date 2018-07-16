@@ -1,12 +1,19 @@
 package codewars.tuigroup.com.codewars.ui.challenge;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tuigroup.codewars.data.local.model.CodeChallengeEntity;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -17,14 +24,12 @@ import codewars.tuigroup.com.codewars.ui.widget.ContentLoadingView;
 import dagger.android.support.DaggerAppCompatActivity;
 
 
-public class ChallengeDetailsActivity extends DaggerAppCompatActivity implements ChallengeDetailsContract.View, ContentLoadingView.OnRetryRequestedListener {
+public class ChallengeDetailsActivity extends DaggerAppCompatActivity implements ChallengeDetailsContract.View, ContentLoadingView.OnRetryRequestedListener, View.OnClickListener {
 
     public static final String EXTRA_CHALLENGE_ID = "com.tuigroup.codewars.extra.EXTRA_CHALLENGE_ID";
 
     @Inject
     ChallengeDetailsContract.Presenter challengePresenter;
-    @Inject
-    String challengeId;
 
     @BindView(R.id.contentloadingview_challengedetails)
     ContentLoadingView contentLoadingView;
@@ -36,6 +41,8 @@ public class ChallengeDetailsActivity extends DaggerAppCompatActivity implements
     TextView categoryTextView;
     @BindView(R.id.textview_challengedetails_description)
     TextView descriptionTextView;
+    @BindView(R.id.button_challengedetails_url)
+    TextView urlButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +52,13 @@ public class ChallengeDetailsActivity extends DaggerAppCompatActivity implements
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(challengeId);
+        getSupportActionBar().setTitle(getString(R.string.challenge_details_activity_title));
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         ButterKnife.bind(this);
 
         contentLoadingView.setOnRetryRequestedListener(this);
+        urlButton.setOnClickListener(this);
 
         challengePresenter.attachView(this);
     }
@@ -93,7 +101,8 @@ public class ChallengeDetailsActivity extends DaggerAppCompatActivity implements
     }
 
     @Override
-    public void showChallenge(CodeChallengeEntity challenge) {;
+    public void showChallenge(CodeChallengeEntity challenge) {
+        ;
         contentLinearLayout.setVisibility(View.VISIBLE);
         contentLoadingView.setVisibility(View.INVISIBLE);
         contentLoadingView.hideMessage();
@@ -101,6 +110,11 @@ public class ChallengeDetailsActivity extends DaggerAppCompatActivity implements
         titleTextView.setText(challenge.getName());
         categoryTextView.setText(challenge.getCategory());
         descriptionTextView.setText(challenge.getDescription());
+        if (!TextUtils.isEmpty(challenge.getUrl())) {
+            urlButton.setVisibility(View.VISIBLE);
+        } else {
+            urlButton.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -124,7 +138,27 @@ public class ChallengeDetailsActivity extends DaggerAppCompatActivity implements
     }
 
     @Override
+    public void showChallengeUrl(String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        PackageManager packageManager = getPackageManager();
+        List<ResolveInfo> activities = packageManager.queryIntentActivities(intent,
+                PackageManager.MATCH_DEFAULT_ONLY);
+        boolean isIntentSafe = activities.size() > 0;
+        if (isIntentSafe) {
+            startActivity(intent);
+        }
+    }
+
+    @Override
     public void onRetryRequested() {
         challengePresenter.loadChallenge();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.button_challengedetails_url) {
+            challengePresenter.openChallengeUrl();
+        }
     }
 }
