@@ -12,4 +12,4 @@ This Android app uses :
 
 Application notes :
  * The app is compatible offline
- * Need some extra work to have the app to survive configuration change and process deaths initiated by the system.
+ * Need some extra work to have the app survive configuration change and process deaths initiated by the system
