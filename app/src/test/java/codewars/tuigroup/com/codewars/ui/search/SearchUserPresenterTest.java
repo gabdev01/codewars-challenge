@@ -16,6 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+import codewars.tuigroup.com.codewars.ui.util.RequestResultType;
 import codewars.tuigroup.com.codewars.util.TestSchedulerProvider;
 import codewars.tuigroup.com.codewars.util.TestUtil;
 import io.reactivex.Flowable;
@@ -104,6 +105,25 @@ public class SearchUserPresenterTest {
         testScheduler.triggerActions();
 
         verify(searchUserView).showUsersSearchHistoryError();
+    }
+
+    @Test
+    public void changeConfigurationWithSuccessUserSearch() {
+        UserEntity userResponse = TestUtil.createUserEntity("foo", "name", 1);
+        SearchUserState SearchUserState = new SearchUserState(UserOrderBy.DATE_ADDED, userResponse, RequestResultType.SUCCESS_RESULT);
+
+        doReturn(Flowable.just(new ArrayList<>()))
+                .when(userRepository)
+                .getLastUsersSearched(UserOrderBy.DATE_ADDED, SEARCH_USER_HISTORY_LIMIT);
+
+        searchUserPresenter.detachView();
+        searchUserPresenter.attachView(searchUserView, SearchUserState);
+        searchUserPresenter.subscribe();
+
+        testScheduler.triggerActions();
+
+        verify(searchUserView).showNoUsersSearchHistory();
+        verify(searchUserView).showSearchUserSuccess(userResponse);
     }
 
     @After
