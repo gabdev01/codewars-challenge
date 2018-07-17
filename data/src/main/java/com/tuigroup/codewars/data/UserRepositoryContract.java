@@ -25,7 +25,7 @@ public interface UserRepositoryContract {
     Flowable<List<UserSearchHistory>> getLastUsersSearched(UserOrderBy orderBy, int limit);
 
     Observable<PagedList<CompletedChallengeEntity>> getCompletedChallenges(
-            ObservableBoundaryCallback.BoundaryCallbackRequestListener listener,
+            ObservableBoundaryCallback boundaryCallback,
             String username);
 
     Flowable<Resource<List<AuthoredChallengeEntity>>> getAuthoredChallenges(String username);

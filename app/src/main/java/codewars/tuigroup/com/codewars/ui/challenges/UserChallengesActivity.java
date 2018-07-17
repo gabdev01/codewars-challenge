@@ -3,6 +3,8 @@ package codewars.tuigroup.com.codewars.ui.challenges;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 
 import javax.inject.Inject;
@@ -60,8 +62,29 @@ public class UserChallengesActivity extends DaggerAppCompatActivity
                 });
 
 
-        completedCompletedChallengesFragment = new CompletedChallengesFragment();
-        authoredChallengesFragment = new AuthoredChallengesFragment();
+        // Create fragment only if activity is started for the first time
+        // If orientation changed savedInstanceState != null
+        if (savedInstanceState == null) {
+            completedCompletedChallengesFragment = new CompletedChallengesFragment();
+            authoredChallengesFragment = new AuthoredChallengesFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.add(
+                    R.id.framelayout_userchallenges_content,
+                    completedCompletedChallengesFragment,
+                    CompletedChallengesFragment.class.getSimpleName());
+            fragmentTransaction.add(
+                    R.id.framelayout_userchallenges_content,
+                    authoredChallengesFragment,
+                    AuthoredChallengesFragment.class.getSimpleName());
+            fragmentTransaction.hide(authoredChallengesFragment);
+            fragmentTransaction.show(completedCompletedChallengesFragment);
+            fragmentTransaction.commit();
+        } else {
+            completedCompletedChallengesFragment = (CompletedChallengesFragment) getSupportFragmentManager()
+                            .findFragmentByTag(CompletedChallengesFragment.class.getSimpleName());
+            authoredChallengesFragment = (AuthoredChallengesFragment) getSupportFragmentManager().
+                    findFragmentByTag(AuthoredChallengesFragment.class.getSimpleName());
+        }
 
         userChallengesContract.attachView(this, savedInstanceState != null ? readFromBundle(savedInstanceState) : null);
     }
@@ -73,10 +96,13 @@ public class UserChallengesActivity extends DaggerAppCompatActivity
     }
 
     private void replaceContentFragmentBy(Fragment fragment) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.framelayout_userchallenges_content, fragment)
-                .commit();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.hide(authoredChallengesFragment);
+        fragmentTransaction.hide(completedCompletedChallengesFragment);
+        fragmentTransaction.show(fragment);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.commit();
     }
 
     private UserChallengesContract.State readFromBundle(Bundle savedInstanceState) {

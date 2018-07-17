@@ -1,28 +1,43 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_vertical"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_completedchallenges"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:paddingBottom="@dimen/activity_default_padding"
-        android:paddingTop="@dimen/activity_default_padding"
-        android:visibility="gone"
-        android:scrollbars="vertical" />
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_completedchallenges"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/activity_default_padding"
+            android:paddingTop="@dimen/activity_default_padding"
+            android:scrollbars="vertical"
+            android:visibility="gone" />
+
+        <codewars.tuigroup.com.codewars.ui.widget.ContentLoadingView
+            android:id="@+id/contentloadingview_completedchallenges_loadmore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/completedchallenge_loading_more_padding"
+            android:paddingEnd="@dimen/completedchallenge_loading_more_padding"
+            android:paddingStart="@dimen/completedchallenge_loading_more_padding"
+            android:paddingTop="@dimen/completedchallenge_loading_more_padding" />
+
+    </LinearLayout>
 
     <codewars.tuigroup.com.codewars.ui.widget.ContentLoadingView
         android:id="@+id/contentloadingview_completedchallenges"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/completedchallenge_loading_vertical_padding"
-        android:paddingEnd="@dimen/completedchallenge_loading_horizontal_padding"
-        android:paddingStart="@dimen/completedchallenge_loading_horizontal_padding"
-        android:paddingTop="@dimen/completedchallenge_loading_vertical_padding"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_default_padding"
+        android:paddingEnd="@dimen/activity_default_padding"
+        android:paddingStart="@dimen/activity_default_padding"
+        android:paddingTop="@dimen/activity_default_padding"
         android:visibility="gone" />
 
-</LinearLayout>
+</FrameLayout>

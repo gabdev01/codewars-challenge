@@ -22,6 +22,10 @@ public class CompletedChallengesContract {
 
         void showNoChallenges();
 
+        void showLoadingMoreChallengesIndicator(boolean enabled);
+
+        void showLoadingMoreChallengesError();
+
         void showChallengeView(String challengeId);
 
         void showAllDataLoaded();
@@ -30,6 +34,8 @@ public class CompletedChallengesContract {
     public interface Presenter extends ScopedPresenter<View, State> {
 
         void loadChallenges();
+
+        void retryLoadMoreChallenges();
 
         void openChallenge(CompletedChallengeEntity challenge);
     }

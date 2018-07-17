@@ -23,8 +23,7 @@
     <!-- User challenges view -->
     <dimen name="authoredchallengeitem_padding">16dp</dimen>
     <dimen name="completedchallengeitem_padding">16dp</dimen>
-    <dimen name="completedchallenge_loading_vertical_padding">8dp</dimen>
-    <dimen name="completedchallenge_loading_horizontal_padding">16dp</dimen>
+    <dimen name="completedchallenge_loading_more_padding">8dp</dimen>
 
     <!-- User challenges view -->
     <dimen name="challengedetails_title_card_vertical_space">8dp</dimen>

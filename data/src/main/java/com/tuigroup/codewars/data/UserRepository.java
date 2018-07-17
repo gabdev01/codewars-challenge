@@ -15,7 +15,6 @@ import com.tuigroup.codewars.data.local.model.UserSearchHistory;
 import com.tuigroup.codewars.data.local.model.UserSearchHistoryEntity;
 import com.tuigroup.codewars.data.mapper.AuthoredChallengeMapper;
 import com.tuigroup.codewars.data.mapper.UserMapper;
-import com.tuigroup.codewars.data.paging.CompletedObservableBoundaryCallback;
 import com.tuigroup.codewars.data.paging.ObservableBoundaryCallback;
 import com.tuigroup.codewars.data.remote.UserRestApi;
 import com.tuigroup.codewars.data.remote.model.AuthoredChallenge;
@@ -38,7 +37,7 @@ import io.reactivex.functions.Function;
 @Singleton
 public class UserRepository implements UserRepositoryContract {
 
-    private static final int COMPLETED_CHALLENGES_PAGE_SIZE = 50;
+    private static final int COMPLETED_CHALLENGES_PAGE_SIZE = 100;
 
     private UserRestApi userRestApi;
     private UserDao userDao;
@@ -96,12 +95,8 @@ public class UserRepository implements UserRepositoryContract {
 
     @Override
     public Observable<PagedList<CompletedChallengeEntity>> getCompletedChallenges(
-            ObservableBoundaryCallback.BoundaryCallbackRequestListener listener,
+            ObservableBoundaryCallback boundaryCallback,
             String username) {
-        CompletedObservableBoundaryCallback boundaryCallback =
-                new CompletedObservableBoundaryCallback(userRestApi, completedChallengeDao);
-        boundaryCallback.setUsername(username);
-        boundaryCallback.setBoundaryCallbackRequestListener(listener);
         DataSource.Factory localData = completedChallengeDao.getCompletedChallengesDataSourceByUser(username);
         PagedList.Config pagedList = new PagedList.Config.Builder()
                 .setPageSize(COMPLETED_CHALLENGES_PAGE_SIZE)

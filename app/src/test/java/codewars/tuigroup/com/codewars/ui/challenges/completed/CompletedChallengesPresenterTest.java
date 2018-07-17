@@ -1,9 +1,8 @@
 package codewars.tuigroup.com.codewars.ui.challenges.completed;
 
-import android.arch.paging.DataSource;
-
 import com.tuigroup.codewars.data.UserRepositoryContract;
 import com.tuigroup.codewars.data.local.model.CompletedChallengeEntity;
+import com.tuigroup.codewars.data.paging.ObservableBoundaryCallback;
 
 import org.junit.After;
 import org.junit.Before;
@@ -31,7 +30,7 @@ public class CompletedChallengesPresenterTest {
     @Mock
     private CompletedChallengesContract.View completedChallengesView;
     @Mock
-    private DataSource<CompletedChallengeEntity, Integer> dataSource;
+    private ObservableBoundaryCallback<CompletedChallengeEntity, String> observableBoundaryCallback;
 
     private TestScheduler testScheduler;
     private CompletedChallengesPresenter completedChallengesPresenter;
@@ -45,17 +44,17 @@ public class CompletedChallengesPresenterTest {
         testScheduler = new TestScheduler();
         TestSchedulerProvider testSchedulerProvider = new TestSchedulerProvider(testScheduler);
         completedChallengesPresenter = new CompletedChallengesPresenter(
-                userRepository, testSchedulerProvider, USERNAME_TEST);
-        completedChallengesPresenter.attachView(completedChallengesView);
+                userRepository, testSchedulerProvider, observableBoundaryCallback, USERNAME_TEST);
     }
 
     @Test
     public void loadChallengesWithErrorFromRepositoryAndLoadIntoView() {
         doReturn(Observable.just(new Throwable()))
                 .when(userRepository)
-                .getCompletedChallenges(completedChallengesPresenter, USERNAME_TEST);
+                .getCompletedChallenges(observableBoundaryCallback, USERNAME_TEST);
 
-        completedChallengesPresenter.loadChallenges();
+        // attachView should load the challenges
+        completedChallengesPresenter.attachView(completedChallengesView);
 
         testScheduler.triggerActions();
 
@@ -64,9 +63,13 @@ public class CompletedChallengesPresenterTest {
 
     @Test
     public void openChallengeFromRepositoryAndLoadIntoView() {
+        doReturn(Observable.just(new Throwable()))
+                .when(userRepository)
+                .getCompletedChallenges(observableBoundaryCallback, USERNAME_TEST);
         CompletedChallengeEntity result = TestUtil.createCompletedChallengeEntity(
                 "id1", "username1", "cat1");
 
+        completedChallengesPresenter.attachView(completedChallengesView);
         completedChallengesPresenter.openChallenge(result);
 
         verify(completedChallengesView).showChallengeView(result.getId());

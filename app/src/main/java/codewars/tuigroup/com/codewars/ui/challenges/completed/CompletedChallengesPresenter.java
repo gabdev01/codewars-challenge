@@ -18,6 +18,7 @@ public class CompletedChallengesPresenter
         implements CompletedChallengesContract.Presenter, ObservableBoundaryCallback.BoundaryCallbackRequestListener {
 
     private UserRepositoryContract userRepository;
+    private ObservableBoundaryCallback<CompletedChallengeEntity, String> completedChallengesBoundaryCallback;
     private String userId;
     private List<CompletedChallengeEntity> completedChallenges;
     private CompositeDisposable challengesCompositeDisposable;
@@ -26,18 +27,25 @@ public class CompletedChallengesPresenter
     @Inject
     public CompletedChallengesPresenter(UserRepositoryContract userRepository,
                                         SchedulerProvider schedulerProvider,
+                                        ObservableBoundaryCallback<CompletedChallengeEntity, String> completedChallengesBoundaryCallback,
                                         String userId) {
         super(schedulerProvider);
         this.userRepository = userRepository;
+        this.completedChallengesBoundaryCallback = completedChallengesBoundaryCallback;
         this.userId = userId;
         this.completedChallenges = null;
         this.challengesCompositeDisposable = new CompositeDisposable();
         this.isRequestInRunning = false;
+
+        this.completedChallengesBoundaryCallback.setParameter(userId);
+        this.completedChallengesBoundaryCallback.setBoundaryCallbackRequestListener(this);
     }
 
     @Override
-    public void subscribe() {
-        super.subscribe();
+    public void attachView(CompletedChallengesContract.View view, CompletedChallengesContract.State state) {
+        super.attachView(view, state);
+        // Load once the challenges when the view is loaded instead of each time the view is visible (subscribe)
+        // as the data are refreshed with the end scroll event
         loadChallenges();
     }
 
@@ -55,14 +63,14 @@ public class CompletedChallengesPresenter
     @Override
     public void loadChallenges() {
         challengesCompositeDisposable.clear();
-        challengesCompositeDisposable.add(userRepository.getCompletedChallenges(this, userId)
+        challengesCompositeDisposable.add(userRepository.getCompletedChallenges(completedChallengesBoundaryCallback, userId)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui(), true)
                 .subscribe(
                         challenges -> {
                             completedChallenges = challenges.snapshot();
                             if (challenges.isEmpty()) {
-                                if(!isRequestInRunning) {
+                                if (!isRequestInRunning) {
                                     view.showNoChallenges();
                                 }
                             } else {
@@ -73,6 +81,11 @@ public class CompletedChallengesPresenter
                             processError(throwable);
                         }
                 ));
+    }
+
+    @Override
+    public void retryLoadMoreChallenges() {
+        completedChallengesBoundaryCallback.retryRequest();
     }
 
     private void processError(Throwable throwable) {
@@ -87,13 +100,15 @@ public class CompletedChallengesPresenter
                 logError(throwable);
                 view.showLoadingChallengesError();
             }
+        } else {
+            view.showLoadingMoreChallengesError();
         }
     }
 
     @Override
     public void onRequestInProgress(boolean inProgress) {
         isRequestInRunning = inProgress;
-        view.showLoadingChallengesIndicator(inProgress);
+        view.showLoadingMoreChallengesIndicator(inProgress);
     }
 
     @Override

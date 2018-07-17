@@ -5,9 +5,12 @@ import com.tuigroup.codewars.data.local.CodeChallengeDao;
 import com.tuigroup.codewars.data.local.CompletedChallengeDao;
 import com.tuigroup.codewars.data.local.UserDao;
 import com.tuigroup.codewars.data.local.UserSearchHistoryDao;
+import com.tuigroup.codewars.data.local.model.CompletedChallengeEntity;
 import com.tuigroup.codewars.data.mapper.AuthoredChallengeMapper;
 import com.tuigroup.codewars.data.mapper.CodeChallengeMapper;
 import com.tuigroup.codewars.data.mapper.UserMapper;
+import com.tuigroup.codewars.data.paging.CompletedChallengesBoundaryCallback;
+import com.tuigroup.codewars.data.paging.ObservableBoundaryCallback;
 import com.tuigroup.codewars.data.remote.CodeChallengeRestApi;
 import com.tuigroup.codewars.data.remote.UserRestApi;
 
@@ -43,5 +46,11 @@ public class RepositoriesModule {
                                                                    CodeChallengeDao codeChallengeDao,
                                                                    CodeChallengeMapper codeChallengeMapper) {
         return new CodeChallengeRepository(codeChallengeRestApi, codeChallengeDao, codeChallengeMapper);
+    }
+
+    @Provides
+    ObservableBoundaryCallback<CompletedChallengeEntity, String> provideCompletedChallengesBoundaryCallback(UserRestApi userRestApi,
+                                                                                                            CompletedChallengeDao completedChallengeDao) {
+        return new CompletedChallengesBoundaryCallback(userRestApi, completedChallengeDao);
     }
 }

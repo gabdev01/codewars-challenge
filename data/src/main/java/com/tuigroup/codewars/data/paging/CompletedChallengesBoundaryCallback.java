@@ -14,38 +14,42 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class CompletedObservableBoundaryCallback extends ObservableBoundaryCallback<CompletedChallengeEntity> {
+public class CompletedChallengesBoundaryCallback extends ObservableBoundaryCallback<CompletedChallengeEntity, String> {
 
     private UserRestApi userRestApi;
     private CompletedChallengeDao completedChallengeDao;
 
     private String username;
+    private int pageIndex;
     private boolean isRequestRunning;
     private boolean isAllDataLoaded;
 
     private BoundaryCallbackRequestListener boundaryCallbackRequestListener;
 
     @Inject
-    public CompletedObservableBoundaryCallback(UserRestApi userRestApi,
+    public CompletedChallengesBoundaryCallback(UserRestApi userRestApi,
                                                CompletedChallengeDao completedChallengeDao) {
         this.userRestApi = userRestApi;
         this.completedChallengeDao = completedChallengeDao;
-        this.username = username;
+        this.username = null;
+        this.pageIndex = 0;
         this.isRequestRunning = false;
         this.isAllDataLoaded = false;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     @Override
     public void setBoundaryCallbackRequestListener(BoundaryCallbackRequestListener listener) {
         boundaryCallbackRequestListener = listener;
+    }
+
+    @Override
+    public void retryRequest() {
+        getAndSaveData(pageIndex);
+    }
+
+    @Override
+    public void setParameter(String parameter) {
+        this.username = parameter;
     }
 
     private void performAllDataLoaded() {
@@ -68,12 +72,14 @@ public class CompletedObservableBoundaryCallback extends ObservableBoundaryCallb
 
     @Override
     public void onZeroItemsLoaded() {
+        pageIndex = 0;
         getAndSaveData(0);
     }
 
     @Override
     public void onItemAtEndLoaded(@NonNull CompletedChallengeEntity itemAtEnd) {
-        getAndSaveData(itemAtEnd.getPageIndexInResponse() + 1);
+        pageIndex = itemAtEnd.getPageIndexInResponse() + 1;
+        getAndSaveData(pageIndex);
     }
 
     private void getAndSaveData(int pageIndex) {

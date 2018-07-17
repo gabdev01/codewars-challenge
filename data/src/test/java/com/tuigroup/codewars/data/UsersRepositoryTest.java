@@ -99,9 +99,9 @@ public class UsersRepositoryTest {
                 TestUtil.createAuthoredChallengeEntity(CHALLENGE_ID_TEST, "username", "category");
         List<AuthoredChallenge> authoredChallenges = Arrays.asList(authoredChallenge);
         List<AuthoredChallengeEntity> authoredChallengeEntities = Arrays.asList(authoredChallengeEntity);
-
-        Mockito.when(userRestApi.getAuthoredChallenges(CHALLENGE_ID_TEST))
-                .thenReturn(Single.just(new AuthoredChallengeResponse(authoredChallenges)));
+        AuthoredChallengeResponse authoredChallengeResponse = new AuthoredChallengeResponse(authoredChallenges);
+        Mockito.when(userRestApi.getAuthoredChallenges(USERNAME_TEST))
+                .thenReturn(Single.just(authoredChallengeResponse));
         Mockito.when(authoredChallengeMapper.mapFromApiToEntity(authoredChallenges, USERNAME_TEST))
                 .thenReturn(authoredChallengeEntities);
         Mockito.when(authoredChallengeDao.getAuthoredChallenges(USERNAME_TEST))
